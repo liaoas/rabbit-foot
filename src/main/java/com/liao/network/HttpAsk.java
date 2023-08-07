@@ -2,6 +2,7 @@ package com.liao.network;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -41,24 +42,48 @@ public class HttpAsk<T> {
      * @return 结果
      */
     public T execute() {
+
+        HttpRequest httpRequest = httpRequestBuild();
+
         String method = this.action.get("method").getAsString();
+
         if (method.equalsIgnoreCase(GET)) {
-            return get();
+            return get(httpRequest);
         } else if (method.equals(POST)) {
-            return null;
+            return post(httpRequest);
         }
 
         return null;
     }
 
-    public T get() {
+    /**
+     * 构建请求体
+     *
+     * @return 请求对象
+     */
+    private HttpRequest httpRequestBuild() {
         HttpRequest httpRequest = null;
+
         if (action.has("url")) {
-            httpRequest = HttpRequest.get(action.get("url").getAsString());
+            httpRequest = HttpRequest.of(action.get("url").getAsString());
         }
 
         if (ObjUtil.isNull(httpRequest)) {
             throw new IllegalArgumentException("爬虫动作描述资源缺失");
+        }
+
+        if (action.has("headers")) {
+            Gson gson = new Gson();
+            // 将 JsonObject 转换为 Map
+            Type type = new TypeToken<Map<String, String>>() {
+            }.getType();
+            Map<String, String> headers = gson.fromJson(action.get("headers"), type);
+            for (Map.Entry<String, String> header : headers.entrySet()) {
+                String key = header.getKey();
+                String value = header.getValue();
+                httpRequest = httpRequest.header(key, value);
+            }
+
         }
 
         if (action.has("params")) {
@@ -66,12 +91,40 @@ public class HttpAsk<T> {
             // 将 JsonObject 转换为 Map
             Type type = new TypeToken<Map<String, Object>>() {
             }.getType();
-            Map<String, Object> map = gson.fromJson(action.get("params"), type);
+            Map<String, Object> form = gson.fromJson(action.get("params"), type);
 
-            httpRequest = httpRequest.form(map);
+            httpRequest = httpRequest.form(form);
         }
 
-        String body = httpRequest.execute().body();
+        if (action.has("body")) {
+            JsonObject body = action.get("body").getAsJsonObject();
+            httpRequest = httpRequest.body(String.valueOf(body));
+        }
+
+        return httpRequest;
+    }
+
+    /**
+     * Get 请求
+     *
+     * @return 目标地址
+     */
+    private T get(HttpRequest httpRequest) {
+
+        String body = httpRequest.method(Method.GET).execute().body();
+
+        return (T) body;
+    }
+
+
+    /**
+     * Get 请求
+     *
+     * @return 目标地址
+     */
+    private T post(HttpRequest httpRequest) {
+
+        String body = httpRequest.method(Method.POST).execute().body();
 
         return (T) body;
     }

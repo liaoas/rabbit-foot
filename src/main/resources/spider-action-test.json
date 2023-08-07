@@ -3,16 +3,25 @@
     {
       "site": {
         "method": "GET",
-        "url": "https://search.jd.com/Search",
+        "url": "https://zhuanlan.zhihu.com/p/491298516",
         "headers": {
-          "Content-Type": "application/json",
+          "Cookie": "application/json",
+          "Authorization": "Bearer your_access_token_here"
+        },
+        "params": {
+          "keyword": "三体"
+        }
+      }
+    },
+    {
+      "site": {
+        "method": "POST",
+        "url": "http://localhost:80/job/post-test",
+        "headers": {
+          "Cookie": "application/json",
           "Authorization": "Bearer your_access_token_here"
         },
         "body": {
-          "key1": "value1",
-          "key2": "value2"
-        },
-        "params": {
           "keyword": "三体"
         }
       }

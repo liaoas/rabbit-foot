@@ -38,7 +38,7 @@ public class ActionResourcesJson<T> {
             JsonObject bookObj = bookElement.getAsJsonObject();
             JsonObject siteObj = bookObj.get("site").getAsJsonObject();
             HttpAsk<T> httpAsk = new HttpAsk<>(siteObj);
-            return httpAsk.execute();
+            System.out.println(httpAsk.execute());
         }
 
         return null;
