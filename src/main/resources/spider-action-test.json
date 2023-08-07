@@ -1,7 +1,21 @@
 {
-  "site": {
-    "url": "",
-    "method": "get",
-    "headers": ""
-  }
+  "books": [
+    {
+      "site": {
+        "method": "GET",
+        "url": "https://search.jd.com/Search",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer your_access_token_here"
+        },
+        "body": {
+          "key1": "value1",
+          "key2": "value2"
+        },
+        "params": {
+          "keyword": "三体"
+        }
+      }
+    }
+  ]
 }
