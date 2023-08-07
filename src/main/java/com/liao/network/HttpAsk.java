@@ -5,6 +5,7 @@ import cn.hutool.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.Data;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -17,7 +18,11 @@ import java.util.Map;
  * @author LiAo
  * @since 2023-08-07
  */
+@Data
+@SuppressWarnings("unchecked")
 public class HttpAsk<T> {
+
+    private T data;
 
     private static final String GET = "GET";
 
@@ -25,9 +30,6 @@ public class HttpAsk<T> {
 
     // 存储 Http 请求动作
     private JsonObject action;
-
-    private HttpAsk() {
-    }
 
     public HttpAsk(JsonObject action) {
         this.action = action;
