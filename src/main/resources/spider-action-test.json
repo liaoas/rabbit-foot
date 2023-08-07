@@ -11,6 +11,23 @@
         "params": {
           "keyword": "三体"
         }
+      },
+      "spider-action": {
+        "element": {
+          "element-type": "id",
+          "name": "content",
+          "content-type": "object",
+          "element": {
+            "element-type": "class",
+            "name": "books",
+            "content-type": "array",
+            "element": {
+              "element-type": "tage",
+              "name": "li",
+              "content-type": "array"
+            }
+          }
+        }
       }
     },
     {
