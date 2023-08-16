@@ -83,7 +83,6 @@ public class HttpAsk<T> {
                 String value = header.getValue();
                 httpRequest = httpRequest.header(key, value);
             }
-
         }
 
         if (action.has("params")) {
@@ -107,7 +106,7 @@ public class HttpAsk<T> {
     /**
      * Get 请求
      *
-     * @return 目标地址
+    * @return 目标地址
      */
     private T get(HttpRequest httpRequest) {
 
