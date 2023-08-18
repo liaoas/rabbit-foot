@@ -3,6 +3,21 @@ package com.liao;
 import com.liao.core.ActionResourcesJson;
 
 /**
+ *
+ *
+ * //    {
+ * //      "site": {
+ * //        "method": "POST",
+ * //        "url": "http://localhost:80/job/post-test",
+ * //        "headers": {
+ * //          "Cookie": "application/json",
+ * //          "Authorization": "Bearer your_access_token_here"
+ * //        },
+ * //        "body": {
+ * //          "keyword": "三体"
+ * //        }
+ * //      }
+ * //    }
  * <p>
  * JsonSpiderBuild
  * </p>
@@ -13,11 +28,7 @@ import com.liao.core.ActionResourcesJson;
 public class Main {
     public static void main(String[] args) {
 
-        ActionResourcesJson<String> jsonSpiderBuild = new ActionResourcesJson<>();
 
-        jsonSpiderBuild.readSpiderActionResourceJson();
-
-        System.out.println(jsonSpiderBuild.getRequestCenter());
     }
 
 }

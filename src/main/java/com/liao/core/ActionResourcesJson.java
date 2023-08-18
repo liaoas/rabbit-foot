@@ -2,6 +2,7 @@ package com.liao.core;
 
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,39 +17,49 @@ import java.util.List;
 
 /**
  * <p>
- * 爬虫构造器
+ * 爬虫动作描述资源类
  * </p>
  *
  * @author LiAo
  * @since 2023-08-03
  */
 @Slf4j
-public class ActionResourcesJson<T> {
+public class ActionResourcesJson {
 
-    private JsonObject action;
+    /**
+     * 获取指定名称的爬虫描述
+     *
+     * @param name 爬虫名称
+     * @return 爬虫描述 Json
+     */
+    public static JsonObject getSpiderActionJson(String name) {
+        if (StrUtil.isEmpty(name)) {
+            return null;
+        }
 
-    public ActionResourcesJson() {
-    }
+        JsonObject jsonObject = readSpiderActionJson();
 
-    public T getRequestCenter() {
+        if (ObjUtil.isNull(jsonObject)) {
+            return null;
+        }
 
-        JsonArray booksArray = this.action.get("books").getAsJsonArray();
+        JsonArray books = jsonObject.get("books").getAsJsonArray();
 
-        for (JsonElement bookElement : booksArray) {
+        // 获取执行名称的动作
+        for (JsonElement bookElement : books) {
             JsonObject bookObj = bookElement.getAsJsonObject();
-            JsonObject siteObj = bookObj.get("site").getAsJsonObject();
-            HttpAsk<T> httpAsk = new HttpAsk<>(siteObj);
-            System.out.println(httpAsk.execute());
+            if (name.equals(bookObj.get("name").getAsString())) {
+                return bookObj;
+            }
         }
 
         return null;
     }
 
-
     /**
      * 读取爬虫动作的资源文件
      */
-    public void readSpiderActionResourceJson() {
+    private static JsonObject readSpiderActionJson() {
 
         // 通过 ClassLoader 获取资源文件的输入流
         URL resource = Main.class.getClassLoader().getResource("spider-action-test.json");
@@ -65,8 +76,10 @@ public class ActionResourcesJson<T> {
 
         if (!sb.isEmpty()) {
             Gson gson = new Gson();
-            this.action = gson.fromJson(sb, JsonObject.class);
+            return gson.fromJson(sb, JsonObject.class);
         }
+
+        return null;
     }
 
 }

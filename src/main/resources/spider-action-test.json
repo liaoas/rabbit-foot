@@ -1,9 +1,10 @@
 {
   "books": [
     {
+      "name": "jd",
       "site": {
         "method": "GET",
-        "url": "https://zhuanlan.zhihu.com/p/491298516",
+        "url": "https://search.jd.com/Search",
         "headers": {
           "Cookie": "application/json",
           "Authorization": "Bearer your_access_token_here"
@@ -12,14 +13,14 @@
           "keyword": "三体"
         }
       },
-      "spider-action": {
+      "resolver-action": {
         "element": {
           "element-type": "id",
-          "name": "content",
+          "name": "J_main",
           "content-type": "object",
           "element": {
             "element-type": "class",
-            "name": "books",
+            "name": "gl-warp clearfix",
             "content-type": "array",
             "element": {
               "element-type": "tage",
@@ -27,19 +28,6 @@
               "content-type": "array"
             }
           }
-        }
-      }
-    },
-    {
-      "site": {
-        "method": "POST",
-        "url": "http://localhost:80/job/post-test",
-        "headers": {
-          "Cookie": "application/json",
-          "Authorization": "Bearer your_access_token_here"
-        },
-        "body": {
-          "keyword": "三体"
         }
       }
     }
