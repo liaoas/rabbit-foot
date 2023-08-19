@@ -1,6 +1,6 @@
 package com.liao;
 
-import com.liao.core.ActionResourcesJson;
+import com.liao.core.spider.html.HTMLSpiderResolver;
 
 /**
  *
@@ -28,7 +28,9 @@ import com.liao.core.ActionResourcesJson;
 public class Main {
     public static void main(String[] args) {
 
+        HTMLSpiderResolver jd = new HTMLSpiderResolver();
 
+        jd.execute("jd");
     }
 
 }

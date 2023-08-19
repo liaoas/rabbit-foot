@@ -3,12 +3,10 @@ package com.liao.network;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.liao.utils.ConvertUtil;
 import lombok.Data;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -30,9 +28,9 @@ public class HttpAsk<T> {
     private static final String POST = "POST";
 
     // 存储 Http 请求动作
-    private JsonObject action;
+    private JsonNode action;
 
-    public HttpAsk(JsonObject action) {
+    public HttpAsk(JsonNode action) {
         this.action = action;
     }
 
@@ -45,7 +43,7 @@ public class HttpAsk<T> {
 
         HttpRequest httpRequest = httpRequestBuild();
 
-        String method = this.action.get("method").getAsString();
+        String method = this.action.get("method").asText();
 
         if (method.equalsIgnoreCase(GET)) {
             return get(httpRequest);
@@ -65,7 +63,7 @@ public class HttpAsk<T> {
         HttpRequest httpRequest = null;
 
         if (action.has("url")) {
-            httpRequest = HttpRequest.of(action.get("url").getAsString());
+            httpRequest = HttpRequest.of(action.get("url").asText());
         }
 
         if (ObjUtil.isNull(httpRequest)) {
@@ -73,12 +71,9 @@ public class HttpAsk<T> {
         }
 
         if (action.has("headers")) {
-            Gson gson = new Gson();
             // 将 JsonObject 转换为 Map
-            Type type = new TypeToken<Map<String, String>>() {
-            }.getType();
-            Map<String, String> headers = gson.fromJson(action.get("headers"), type);
-            for (Map.Entry<String, String> header : headers.entrySet()) {
+            Map<String, String> result = ConvertUtil.JsonNodeToMapStrStr(action.get("headers"));
+            for (Map.Entry<String, String> header : result.entrySet()) {
                 String key = header.getKey();
                 String value = header.getValue();
                 httpRequest = httpRequest.header(key, value);
@@ -86,18 +81,14 @@ public class HttpAsk<T> {
         }
 
         if (action.has("params")) {
-            Gson gson = new Gson();
             // 将 JsonObject 转换为 Map
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            Map<String, Object> form = gson.fromJson(action.get("params"), type);
+            Map<String, Object> result = ConvertUtil.JsonNodeToMapStrObj(action.get("params"));
 
-            httpRequest = httpRequest.form(form);
+            httpRequest = httpRequest.form(result);
         }
 
         if (action.has("body")) {
-            JsonObject body = action.get("body").getAsJsonObject();
-            httpRequest = httpRequest.body(String.valueOf(body));
+            httpRequest = httpRequest.body(action.get("body").asText());
         }
 
         return httpRequest;

@@ -1,19 +1,15 @@
 package com.liao.core;
 
-import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.liao.Main;
-import com.liao.network.HttpAsk;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * <p>
@@ -32,24 +28,23 @@ public class ActionResourcesJson {
      * @param name 爬虫名称
      * @return 爬虫描述 Json
      */
-    public static JsonObject getSpiderActionJson(String name) {
+    public static JsonNode getSpiderActionJson(String name) {
         if (StrUtil.isEmpty(name)) {
             return null;
         }
 
-        JsonObject jsonObject = readSpiderActionJson();
+        ObjectNode node = readSpiderActionJson();
 
-        if (ObjUtil.isNull(jsonObject)) {
+        if (ObjUtil.isNull(node)) {
             return null;
         }
 
-        JsonArray books = jsonObject.get("books").getAsJsonArray();
 
-        // 获取执行名称的动作
-        for (JsonElement bookElement : books) {
-            JsonObject bookObj = bookElement.getAsJsonObject();
-            if (name.equals(bookObj.get("name").getAsString())) {
-                return bookObj;
+        ArrayNode books = node.withArray("books");
+
+        for (JsonNode book : books) {
+            if (name.equals(book.get("name").asText())) {
+                return book;
             }
         }
 
@@ -59,27 +54,24 @@ public class ActionResourcesJson {
     /**
      * 读取爬虫动作的资源文件
      */
-    private static JsonObject readSpiderActionJson() {
+    private static ObjectNode readSpiderActionJson() {
+
+        ObjectMapper mapper = new ObjectMapper();
 
         // 通过 ClassLoader 获取资源文件的输入流
-        URL resource = Main.class.getClassLoader().getResource("spider-action-test.json");
+        URL resource = ActionResourcesJson.class.getClassLoader().getResource("spider-action-test.json");
+        ObjectNode objectNode = null;
+        try {
+            objectNode = mapper.readValue(resource, ObjectNode.class);
+        } catch (IOException e) {
+            log.error("爬虫资源解析失败，请检数据是否合法");
+        }
 
-        if (ObjUtil.isNull(resource)) {
+        if (ObjUtil.isNull(objectNode)) {
             throw new IllegalArgumentException("爬虫动作描述资源缺失");
         }
 
-        FileReader fileReader = new FileReader(new File(resource.getFile()));
-
-        List<String> strings = fileReader.readLines();
-
-        String sb = String.join("", strings);
-
-        if (!sb.isEmpty()) {
-            Gson gson = new Gson();
-            return gson.fromJson(sb, JsonObject.class);
-        }
-
-        return null;
+        return objectNode;
     }
 
 }
