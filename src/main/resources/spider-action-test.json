@@ -6,26 +6,34 @@
         "method": "GET",
         "url": "https://search.jd.com/Search",
         "headers": {
-          "Cookie": "application/json",
-          "Authorization": "Bearer your_access_token_here"
+          "Cookie": "此处填写京东登录Cookie"
         },
         "params": {
-          "keyword": "三体"
+          "keyword": "三体",
+          "enc": "utf-8",
+          "pvid": "4f8c8a5109844e269e55c59413382c1e"
         }
       },
       "resolver-action": {
         "element": {
           "element-type": "id",
-          "name": "J_main",
+          "element-value": "J_main",
           "content-type": "object",
           "element": {
             "element-type": "class",
-            "name": "gl-warp clearfix",
+            "element-value": "gl-warp clearfix",
             "content-type": "array",
             "element": {
               "element-type": "tage",
-              "name": "li",
-              "content-type": "array"
+              "element-value": "li",
+              "content-type": "array",
+              "element": {
+                "element-type": "tage",
+                "element-value": "em",
+                "content-type": "obj",
+                "leaf-index": 1,
+                "is-leaf": true
+              }
             }
           }
         }

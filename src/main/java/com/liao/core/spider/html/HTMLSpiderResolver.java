@@ -3,7 +3,8 @@ package com.liao.core.spider.html;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.JsonArray;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.liao.core.ActionResourcesJson;
 import com.liao.network.HttpAsk;
 import org.jsoup.Jsoup;
@@ -44,7 +45,7 @@ public class HTMLSpiderResolver {
         }
 
         // 解析 HTML 节点
-        JsonArray jsonObject = webElementResolver(spiderActionJson);
+        ArrayNode arrayNode = webElementResolver(spiderActionJson);
 
     }
 
@@ -73,16 +74,19 @@ public class HTMLSpiderResolver {
      * @param resolverAction 解析动作
      * @return 爬取结果
      */
-    private JsonArray webElementResolver(JsonNode resolverAction) {
+    private ArrayNode webElementResolver(JsonNode resolverAction) {
         if (ObjUtil.isNull(resolverAction)) {
             return null;
         }
 
         JsonNode node = resolverAction.path("resolver-action");
-        JsonArray resultArray = new JsonArray();
+        node = node.path("element");
+        JsonMapper resultMap = new JsonMapper();
+
+        ArrayNode arrayNode = resultMap.createArrayNode();
 
         // 递归解析
-        resolver(resultArray, node, null, document);
+        resolver(arrayNode, null, node, null, this.document, "obj");
 
         return null;
     }
@@ -90,18 +94,69 @@ public class HTMLSpiderResolver {
     /**
      * 递归解析内容
      *
-     * @param content 用于爬虫的结果内容
-     * @param action  动作
-     * @param array   爬虫进度指针 多节点
-     * @param obj     爬虫进度指针 单节点
+     * @param content     用于存储爬虫的结果内容
+     * @param contentTemp 用于临时存储不同节点下的结果集
+     * @param action      动作
+     * @param arr         爬虫进度指针 多节点
+     * @param obj         爬虫进度指针 单节点
+     * @param lastType    上次节点类型
      */
-    private void resolver(JsonArray content, JsonNode action, Elements array, Element obj) {
+    private void resolver(ArrayNode content, JsonNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
         if (ObjUtil.isNull(action)) {
             return;
         }
 
-        JsonNode elementNode = action.path("element");
+        String elementType = action.get("element-type").asText();
 
-        System.out.println(obj.html());
+        String elementValue = action.get("element-value").asText();
+
+        if ("obj".equals(lastType)) {
+            switch (elementType) {
+                case "id":
+                    obj = obj.getElementById(elementValue);
+                    lastType = "obj";
+                    break;
+                case "class":
+                    arr = obj.getElementsByClass(elementValue);
+                    lastType = "arr";
+                    break;
+            }
+        } else {
+            for (Element element : arr) {
+                switch (elementType) {
+                    case "id":
+                        obj = element.getElementById(elementValue);
+                        lastType = "obj";
+                        break;
+                    case "class":
+                        arr = element.getElementsByClass(elementValue);
+                        lastType = "arr";
+                        break;
+                    case "tage":
+                        if (action.has("leaf-index")) {
+                            int anInt = action.get("leaf-index").asInt();
+                            obj = element.getElementsByTag(elementValue).get(anInt);
+                            if (action.has("is-leaf")) {
+                                System.out.println(obj.text());
+                            }
+                            lastType = "obj";
+                        } else {
+                            arr = element.getElementsByTag(elementValue);
+                            lastType = "arr";
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        if (!action.has("element")) {
+            return;
+        }
+
+        action = action.path("element");
+
+        resolver(content, contentTemp, action, arr, obj, lastType);
     }
+
 }
