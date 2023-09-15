@@ -2,9 +2,12 @@ package com.liao.core.spider.html;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.liao.core.ActionResourcesJson;
 import com.liao.network.HttpAsk;
 import org.jsoup.Jsoup;
@@ -46,7 +49,7 @@ public class HTMLSpiderResolver {
 
         // 解析 HTML 节点
         ArrayNode arrayNode = webElementResolver(spiderActionJson);
-
+        System.out.println();
     }
 
     /**
@@ -88,7 +91,7 @@ public class HTMLSpiderResolver {
         // 递归解析
         resolver(arrayNode, null, node, null, this.document, "obj");
 
-        return null;
+        return arrayNode;
     }
 
     /**
@@ -101,7 +104,7 @@ public class HTMLSpiderResolver {
      * @param obj         爬虫进度指针 单节点
      * @param lastType    上次节点类型
      */
-    private void resolver(ArrayNode content, JsonNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
+    private void resolver(ArrayNode content, ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
         if (ObjUtil.isNull(action)) {
             return;
         }
@@ -125,20 +128,29 @@ public class HTMLSpiderResolver {
             for (Element element : arr) {
                 switch (elementType) {
                     case "id":
-                        obj = element.getElementById(elementValue);
-                        lastType = "obj";
+                        if (action.has("leaf-index")) {
+                            obj = element.getElementById(elementValue);
+                            lastType = "obj";
+                        } else {
+                            obj = element.getElementById(elementValue);
+                            lastType = "arr";
+                        }
                         break;
                     case "class":
-                        arr = element.getElementsByClass(elementValue);
-                        lastType = "arr";
+                        if (action.has("leaf-index")) {
+                            int anInt = action.get("leaf-index").asInt();
+                            obj = element.getElementsByClass(elementValue).get(anInt);
+                            lastType = "obj";
+                        } else {
+                            arr = element.getElementsByClass(elementValue);
+                            lastType = "arr";
+                        }
                         break;
+
                     case "tage":
                         if (action.has("leaf-index")) {
                             int anInt = action.get("leaf-index").asInt();
                             obj = element.getElementsByTag(elementValue).get(anInt);
-                            if (action.has("is-leaf")) {
-                                System.out.println(obj.text());
-                            }
                             lastType = "obj";
                         } else {
                             arr = element.getElementsByTag(elementValue);
@@ -146,7 +158,23 @@ public class HTMLSpiderResolver {
                         }
 
                         break;
+                    case "result":
+                        // 是否开始分开组装结果
+                        if (!action.has("result-element")) {
+                            break;
+                        }
+
+                        ArrayNode arrayNode = action.withArray("result-element");
+                        ObjectNode objectNode = new ObjectMapper().createObjectNode();
+
+                        for (JsonNode jsonNode : arrayNode) {
+                            packageAssembly(objectNode, jsonNode, null, element, "obj");
+                        }
+
+                        content.add(objectNode);
+                        break;
                 }
+
             }
         }
 
@@ -158,5 +186,222 @@ public class HTMLSpiderResolver {
 
         resolver(content, contentTemp, action, arr, obj, lastType);
     }
+
+    private void packageAssembly(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
+        if (ObjUtil.isNull(action)) {
+            return;
+        }
+
+        String elementType = action.get("element-type").asText();
+
+        String elementValue = action.get("element-value").asText();
+
+        if ("obj".equals(lastType)) {
+            switch (elementType) {
+                case "id":
+                    // 判断是否是叶子|结果节点
+                    if (action.has("leaf-index")) {
+                        obj = obj.getElementById(elementValue);
+                        if (action.has("is-leaf")) {
+
+                            if (!action.has("target-key")) {
+                                break;
+                            }
+
+                            String text = action.get("target-key").asText();
+                            if (text.equals("text")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                            }
+
+                            if (text.equals("src")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+
+                            }
+                        }
+                        lastType = "obj";
+
+
+                    } else {
+                        obj = obj.getElementById(elementValue);
+                        lastType = "obj";
+                    }
+                    break;
+                case "class":
+                    // 判断是否是叶子|结果节点
+                    if (action.has("leaf-index")) {
+                        int anInt = action.get("leaf-index").asInt();
+                        obj = obj.getElementsByClass(elementValue).get(anInt);
+                        if (action.has("is-leaf")) {
+
+                            if (!action.has("target-key")) {
+
+                            }
+
+                            String text = action.get("target-key").asText();
+                            if (text.equals("text")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                            }
+
+                            if (text.equals("src")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+
+                            }
+                        }
+                        lastType = "obj";
+
+
+                    } else {
+                        arr = obj.getElementsByClass(elementValue);
+                        lastType = "arr";
+                    }
+                    break;
+                case "tage":
+                    if (action.has("leaf-index")) {
+                        int anInt = action.get("leaf-index").asInt();
+                        obj = obj.getElementsByTag(elementValue).get(anInt);
+                        if (action.has("is-leaf")) {
+                            String text = action.get("target-key").asText();
+
+                            if (!action.has("target-key")) {
+                                break;
+                            }
+
+                            if (text.equals("text")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                            }
+
+                            if (text.equals("src")) {
+                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+                            }
+
+                        }
+                        lastType = "obj";
+                    } else {
+                        arr = obj.getElementsByTag(elementValue);
+                        lastType = "arr";
+                    }
+                    break;
+            }
+        } else {
+            for (Element element : arr) {
+                switch (elementType) {
+                    case "id":
+                        // 判断是否是叶子|结果节点
+                        if (action.has("leaf-index")) {
+                            obj = element.getElementById(elementValue);
+                            if (action.has("is-leaf")) {
+
+                                if (!action.has("target-key")) {
+                                    break;
+                                }
+
+                                String text = action.get("target-key").asText();
+                                if (text.equals("text")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                                }
+
+                                if (text.equals("src")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+                                }
+                            }
+                            lastType = "obj";
+
+
+                        } else {
+                            obj = element.getElementById(elementValue);
+                            lastType = "obj";
+                        }
+                        break;
+                    case "class":
+
+                        // 判断是否是叶子|结果节点
+                        if (action.has("leaf-index")) {
+                            int anInt = action.get("leaf-index").asInt();
+                            obj = element.getElementsByClass(elementValue).get(anInt);
+                            if (action.has("is-leaf")) {
+
+                                if (!action.has("target-key")) {
+                                    break;
+                                }
+
+                                String text = action.get("target-key").asText();
+                                if (text.equals("text")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                                }
+
+                                if (text.equals("src")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+
+                                }
+                            }
+                            lastType = "obj";
+
+
+                        } else {
+                            arr = element.getElementsByClass(elementValue);
+                            lastType = "arr";
+                        }
+                        break;
+                    case "tage":
+                        if (action.has("leaf-index")) {
+                            int anInt = action.get("leaf-index").asInt();
+                            obj = element.getElementsByTag(elementValue).get(anInt);
+                            if (action.has("is-leaf")) {
+                                String text = action.get("target-key").asText();
+
+                                if (!action.has("target-key")) {
+                                    break;
+                                }
+
+                                if (text.equals("text")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.text());
+
+                                }
+
+                                if (text.equals("src")) {
+                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+
+                                }
+
+                            }
+                            lastType = "obj";
+                        } else {
+                            arr = element.getElementsByTag(elementValue);
+                            lastType = "arr";
+                        }
+                        break;
+                }
+            }
+        }
+
+        if (!action.has("element")) {
+            return;
+        }
+
+        action = action.path("element");
+
+        packageAssembly(contentTemp, action, arr, obj, lastType);
+    }
+
+    private ObjectNode objectNodeCopy(ObjectNode nodes) {
+        JsonMapper jsonMapper = new JsonMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = jsonMapper.readTree(nodes.toString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        if (jsonNode instanceof ObjectNode) {
+            return (ObjectNode) jsonNode;
+        }
+
+        return null;
+    }
+
 
 }
