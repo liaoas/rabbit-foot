@@ -1,6 +1,9 @@
 package com.liao;
 
 import com.liao.core.spider.html.HTMLSpiderResolver;
+import com.liao.entity.ResultEntity;
+
+import java.util.List;
 
 /**
  *
@@ -28,9 +31,11 @@ import com.liao.core.spider.html.HTMLSpiderResolver;
 public class Main {
     public static void main(String[] args) {
 
-        HTMLSpiderResolver jd = new HTMLSpiderResolver();
+        HTMLSpiderResolver<ResultEntity> jd = new HTMLSpiderResolver<>();
 
-        jd.execute("jd");
+        List<ResultEntity> jd1 = jd.execute("jd");
+
+        System.out.println();
     }
 
 }

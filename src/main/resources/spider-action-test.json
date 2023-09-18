@@ -50,6 +50,9 @@
             }
           }
         }
+      },
+      "config": {
+        "java-type": "com.liao.entity.ResultEntity"
       }
     }
   ]

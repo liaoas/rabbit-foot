@@ -2,6 +2,7 @@ package com.liao.core.spider.html;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -14,6 +15,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.List;
+
 /**
  * <p>
  * HTML 爬虫解析器
@@ -22,7 +25,7 @@ import org.jsoup.select.Elements;
  * @author LiAo
  * @since 2023-08-16
  */
-public class HTMLSpiderResolver {
+public class HTMLSpiderResolver<T> {
 
     private Document document;
 
@@ -31,25 +34,49 @@ public class HTMLSpiderResolver {
      *
      * @param spiderName 爬虫动作名称
      */
-    public void execute(String spiderName) {
+    public List<T> execute(String spiderName) {
         // 获取动作
         JsonNode spiderActionJson = ActionResourcesJson.getSpiderActionJson(spiderName);
 
         if (ObjUtil.isNull(spiderActionJson)) {
-            return;
+            return null;
         }
 
         // 爬取目标网站内容
         requestWebPage(spiderActionJson);
 
         if (ObjUtil.isNull(this.document)) {
-            return;
+            return null;
         }
 
         // 解析 HTML 节点
         ArrayNode arrayNode = webElementResolver(spiderActionJson);
 
-        System.out.println();
+        return convert(spiderActionJson, arrayNode);
+    }
+
+    /**
+     * 将结果转换为实体类对象
+     *
+     * @param action    动作
+     * @param arrayNode 结果集合
+     * @return T
+     */
+    private List<T> convert(JsonNode action, ArrayNode arrayNode) {
+        JsonNode configObj = action.path("config");
+
+        String javaType = configObj.get("java-type").asText();
+        try {
+            Class<?> Clazz = Class.forName(javaType);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            return objectMapper
+                    .readerForListOf(Clazz)
+                    .readValue(arrayNode.toString());
+        } catch (ClassNotFoundException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -309,4 +336,5 @@ public class HTMLSpiderResolver {
         }
         lastType = "obj";
     }
+
 }
