@@ -2,7 +2,6 @@ package com.liao.core.spider.html;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -41,7 +40,7 @@ public class HTMLSpiderResolver {
         }
 
         // 爬取目标网站内容
-        captureWebContent(spiderActionJson);
+        requestWebPage(spiderActionJson);
 
         if (ObjUtil.isNull(this.document)) {
             return;
@@ -49,15 +48,16 @@ public class HTMLSpiderResolver {
 
         // 解析 HTML 节点
         ArrayNode arrayNode = webElementResolver(spiderActionJson);
+
         System.out.println();
     }
 
     /**
-     * 根据指定的爬虫动作抓取目标内容
+     * 根据指定的爬虫动作抓取目标内容页面
      *
      * @param httpAction http 执行动作
      */
-    private void captureWebContent(JsonNode httpAction) {
+    private void requestWebPage(JsonNode httpAction) {
 
         JsonNode siteObj = httpAction.path("site");
 
@@ -88,23 +88,21 @@ public class HTMLSpiderResolver {
 
         ArrayNode arrayNode = resultMap.createArrayNode();
 
-        // 递归解析
-        resolver(arrayNode, null, node, null, this.document, "obj");
+        resolver(arrayNode, node, null, this.document, "obj");
 
         return arrayNode;
     }
 
     /**
-     * 递归解析内容
+     * 内容解析
      *
-     * @param content     用于存储爬虫的结果内容
-     * @param contentTemp 用于临时存储不同节点下的结果集
-     * @param action      动作
-     * @param arr         爬虫进度指针 多节点
-     * @param obj         爬虫进度指针 单节点
-     * @param lastType    上次节点类型
+     * @param content  用于存储爬虫的结果内容
+     * @param action   动作
+     * @param arr      爬虫进度指针 多节点
+     * @param obj      爬虫进度指针 单节点
+     * @param lastType 上次节点类型
      */
-    private void resolver(ArrayNode content, ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
+    private void resolver(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
         if (ObjUtil.isNull(action)) {
             return;
         }
@@ -159,12 +157,13 @@ public class HTMLSpiderResolver {
 
                         break;
                     case "result":
-                        // 是否开始分开组装结果
+                        // 判断结果伪动作，标记开始组装结果
                         if (!action.has("result-element")) {
                             break;
                         }
 
                         ArrayNode arrayNode = action.withArray("result-element");
+
                         ObjectNode objectNode = new ObjectMapper().createObjectNode();
 
                         for (JsonNode jsonNode : arrayNode) {
@@ -182,200 +181,34 @@ public class HTMLSpiderResolver {
             return;
         }
 
+        // 下一次动作
         action = action.path("element");
 
-        resolver(content, contentTemp, action, arr, obj, lastType);
+        // 递归下一次
+        resolver(content, action, arr, obj, lastType);
     }
 
+    /**
+     * 递归解析结果节点描述部分并组装成对象
+     *
+     * @param contentTemp 单个结果对象
+     * @param action      动作
+     * @param arr         存储本次解析集合节点对象，用作下一次递归
+     * @param obj         存储本次解析节点对象，用作下一次递归
+     * @param lastType    标记一下次解析结果类型
+     */
     private void packageAssembly(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
         if (ObjUtil.isNull(action)) {
             return;
         }
-
         String elementType = action.get("element-type").asText();
-
         String elementValue = action.get("element-value").asText();
 
         if ("obj".equals(lastType)) {
-            switch (elementType) {
-                case "id":
-                    // 判断是否是叶子|结果节点
-                    if (action.has("leaf-index")) {
-                        obj = obj.getElementById(elementValue);
-                        if (action.has("is-leaf")) {
-
-                            if (!action.has("target-key")) {
-                                break;
-                            }
-
-                            String text = action.get("target-key").asText();
-                            if (text.equals("text")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                            }
-
-                            if (text.equals("src")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-
-                            }
-                        }
-                        lastType = "obj";
-
-
-                    } else {
-                        obj = obj.getElementById(elementValue);
-                        lastType = "obj";
-                    }
-                    break;
-                case "class":
-                    // 判断是否是叶子|结果节点
-                    if (action.has("leaf-index")) {
-                        int anInt = action.get("leaf-index").asInt();
-                        obj = obj.getElementsByClass(elementValue).get(anInt);
-                        if (action.has("is-leaf")) {
-
-                            if (!action.has("target-key")) {
-
-                            }
-
-                            String text = action.get("target-key").asText();
-                            if (text.equals("text")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                            }
-
-                            if (text.equals("src")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-
-                            }
-                        }
-                        lastType = "obj";
-
-
-                    } else {
-                        arr = obj.getElementsByClass(elementValue);
-                        lastType = "arr";
-                    }
-                    break;
-                case "tage":
-                    if (action.has("leaf-index")) {
-                        int anInt = action.get("leaf-index").asInt();
-                        obj = obj.getElementsByTag(elementValue).get(anInt);
-                        if (action.has("is-leaf")) {
-                            String text = action.get("target-key").asText();
-
-                            if (!action.has("target-key")) {
-                                break;
-                            }
-
-                            if (text.equals("text")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                            }
-
-                            if (text.equals("src")) {
-                                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-                            }
-
-                        }
-                        lastType = "obj";
-                    } else {
-                        arr = obj.getElementsByTag(elementValue);
-                        lastType = "arr";
-                    }
-                    break;
-            }
+            structuralAnalysisMap(contentTemp, action, elementType, elementValue, obj, arr, obj, lastType);
         } else {
             for (Element element : arr) {
-                switch (elementType) {
-                    case "id":
-                        // 判断是否是叶子|结果节点
-                        if (action.has("leaf-index")) {
-                            obj = element.getElementById(elementValue);
-                            if (action.has("is-leaf")) {
-
-                                if (!action.has("target-key")) {
-                                    break;
-                                }
-
-                                String text = action.get("target-key").asText();
-                                if (text.equals("text")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                                }
-
-                                if (text.equals("src")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-                                }
-                            }
-                            lastType = "obj";
-
-
-                        } else {
-                            obj = element.getElementById(elementValue);
-                            lastType = "obj";
-                        }
-                        break;
-                    case "class":
-
-                        // 判断是否是叶子|结果节点
-                        if (action.has("leaf-index")) {
-                            int anInt = action.get("leaf-index").asInt();
-                            obj = element.getElementsByClass(elementValue).get(anInt);
-                            if (action.has("is-leaf")) {
-
-                                if (!action.has("target-key")) {
-                                    break;
-                                }
-
-                                String text = action.get("target-key").asText();
-                                if (text.equals("text")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                                }
-
-                                if (text.equals("src")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-
-                                }
-                            }
-                            lastType = "obj";
-
-
-                        } else {
-                            arr = element.getElementsByClass(elementValue);
-                            lastType = "arr";
-                        }
-                        break;
-                    case "tage":
-                        if (action.has("leaf-index")) {
-                            int anInt = action.get("leaf-index").asInt();
-                            obj = element.getElementsByTag(elementValue).get(anInt);
-                            if (action.has("is-leaf")) {
-                                String text = action.get("target-key").asText();
-
-                                if (!action.has("target-key")) {
-                                    break;
-                                }
-
-                                if (text.equals("text")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.text());
-
-                                }
-
-                                if (text.equals("src")) {
-                                    contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
-
-                                }
-
-                            }
-                            lastType = "obj";
-                        } else {
-                            arr = element.getElementsByTag(elementValue);
-                            lastType = "arr";
-                        }
-                        break;
-                }
+                structuralAnalysisMap(contentTemp, action, elementType, elementValue, element, arr, obj, lastType);
             }
         }
 
@@ -385,23 +218,95 @@ public class HTMLSpiderResolver {
 
         action = action.path("element");
 
+        Class<HTMLSpiderResolver> htmlSpiderResolverClass = HTMLSpiderResolver.class;
+
         packageAssembly(contentTemp, action, arr, obj, lastType);
     }
 
-    private ObjectNode objectNodeCopy(ObjectNode nodes) {
-        JsonMapper jsonMapper = new JsonMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = jsonMapper.readTree(nodes.toString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        if (jsonNode instanceof ObjectNode) {
-            return (ObjectNode) jsonNode;
-        }
 
-        return null;
+    /**
+     * 结果解析并映射
+     *
+     * @param contentTemp  存储结果
+     * @param action       爬虫动作
+     * @param elementType  节点类型
+     * @param elementValue 节点值
+     * @param element      待解析的节点
+     * @param arr          存储本次解析返回的集合节点对象，用作下一次递归
+     * @param obj          存储本次解析返回的节点对象，用作下一次递归
+     * @param lastType     下一次解析类型
+     */
+    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue,
+                                       Element element, Elements arr, Element obj, String lastType) {
+        switch (elementType) {
+            case "id":
+                if (action.has("leaf-index")) {
+                    obj = element.getElementById(elementValue);
+
+                    results2Json(contentTemp, action, obj, lastType);
+
+                } else {
+                    obj = element.getElementById(elementValue);
+                    lastType = "obj";
+                }
+                break;
+
+            case "class":
+                if (action.has("leaf-index")) {
+                    int anInt = action.get("leaf-index").asInt();
+                    obj = element.getElementsByClass(elementValue).get(anInt);
+
+                    results2Json(contentTemp, action, obj, lastType);
+
+                } else {
+                    arr = element.getElementsByClass(elementValue);
+                    lastType = "arr";
+                }
+                break;
+
+            case "tage":
+                if (action.has("leaf-index")) {
+                    int anInt = action.get("leaf-index").asInt();
+                    obj = element.getElementsByTag(elementValue).get(anInt);
+
+                    results2Json(contentTemp, action, obj, lastType);
+
+                } else {
+                    arr = element.getElementsByTag(elementValue);
+                    lastType = "arr";
+                }
+                break;
+        }
     }
 
+    /**
+     * 将结果组装为Json对象
+     *
+     * @param contentTemp 结果对象
+     * @param action      爬虫动作描述
+     * @param obj         要解析的结果
+     * @param lastType    下一次解析类型
+     */
+    private void results2Json(ObjectNode contentTemp, JsonNode action, Element obj, String lastType) {
+        if (action.has("is-leaf")) {
 
+            if (!action.has("target-key")) {
+                return;
+            }
+
+            String text = action.get("target-key").asText();
+
+            if (text.equals("text")) {
+                contentTemp.put(action.get("result-key").asText(), obj.text());
+
+            }
+
+            if (text.equals("src")) {
+                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+
+            }
+
+        }
+        lastType = "obj";
+    }
 }
