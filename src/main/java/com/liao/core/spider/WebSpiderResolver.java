@@ -1,4 +1,4 @@
-package com.liao.core.spider.html;
+package com.liao.core.spider;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.liao.core.ActionResourcesJson;
 import com.liao.network.HttpAsk;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -25,9 +23,7 @@ import java.util.List;
  * @author LiAo
  * @since 2023-08-16
  */
-public class HTMLSpiderResolver<T> {
-
-    private Document document;
+public class WebSpiderResolver<T> extends SpiderResolver {
 
     /**
      * 爬虫执行
@@ -36,23 +32,29 @@ public class HTMLSpiderResolver<T> {
      */
     public List<T> execute(String spiderName) {
         // 获取动作
-        JsonNode spiderActionJson = ActionResourcesJson.getSpiderActionJson(spiderName);
+        getSpiderActionConfig(spiderName);
 
-        if (ObjUtil.isNull(spiderActionJson)) {
+        if (ObjUtil.isNull(activeRes)) {
             return null;
         }
 
         // 爬取目标网站内容
-        requestWebPage(spiderActionJson);
+        requestWebPage(activeRes);
 
         if (ObjUtil.isNull(this.document)) {
             return null;
         }
 
         // 解析 HTML 节点
-        ArrayNode arrayNode = webElementResolver(spiderActionJson);
+        ArrayNode arrayNode = webElementResolver(activeRes);
 
-        return convert(spiderActionJson, arrayNode);
+        if (arrayNode != null && arrayNode.size() <= 0) {
+            throw new RuntimeException("抓取目标网站失败");
+        }
+
+        assert arrayNode != null;
+
+        return convert(activeRes, arrayNode);
     }
 
     /**
@@ -244,8 +246,6 @@ public class HTMLSpiderResolver<T> {
         }
 
         action = action.path("element");
-
-        Class<HTMLSpiderResolver> htmlSpiderResolverClass = HTMLSpiderResolver.class;
 
         packageAssembly(contentTemp, action, arr, obj, lastType);
     }

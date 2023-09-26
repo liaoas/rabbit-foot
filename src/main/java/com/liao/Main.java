@@ -1,6 +1,6 @@
 package com.liao;
 
-import com.liao.core.spider.html.HTMLSpiderResolver;
+import com.liao.core.spider.WebSpiderResolver;
 import com.liao.entity.ResultEntity;
 
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        HTMLSpiderResolver<ResultEntity> jd = new HTMLSpiderResolver<>();
+        WebSpiderResolver<ResultEntity> jd = new WebSpiderResolver<>();
 
         List<ResultEntity> jd1 = jd.execute("jd");
 
