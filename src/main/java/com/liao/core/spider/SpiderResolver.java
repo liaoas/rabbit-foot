@@ -3,6 +3,7 @@ package com.liao.core.spider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.liao.core.ActionResources;
 import com.liao.interceptors.HandlerInterceptors;
+import com.liao.utils.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  * @since 2023-09-20
  */
 @Slf4j
+@SuppressWarnings("unchecked")
 public abstract class SpiderResolver extends ActionResources {
 
     /**
@@ -54,7 +56,7 @@ public abstract class SpiderResolver extends ActionResources {
 
         JsonNode interceptorsNode = jsonNode.get("interceptors");
 
-        HandlerInterceptors<String> interceptors = getInterceptors(interceptorsNode);
+        HandlerInterceptors<String> interceptors = (HandlerInterceptors<String> )BeanUtils.getBean(interceptorsNode);
 
         String prefix = interceptorsNode.get(PREFIX).asText();
         String suffix = interceptorsNode.get(SUFFIX).asText();
@@ -62,30 +64,4 @@ public abstract class SpiderResolver extends ActionResources {
         return interceptors.handle(handler, prefix, suffix);
     }
 
-    /**
-     * 创建并获取拦截器
-     *
-     * @param jsonNode 拦截器描述
-     */
-    public HandlerInterceptors<String> getInterceptors(JsonNode jsonNode) {
-
-        String javaType = jsonNode.get("type").asText();
-
-        if (interceptorsCache.containsKey(javaType)) {
-            return interceptorsCache.get(javaType);
-        }
-
-        try {
-            HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>) Class.forName(javaType).newInstance();
-            interceptorsCache.put(javaType, interceptors);
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException("名为 " + javaType + " 拦截器创建失败");
-        }
-
-        if (!interceptorsCache.containsKey(javaType)) {
-            throw new RuntimeException("名为 " + javaType + " 拦截器创建失败");
-        }
-
-        return interceptorsCache.get(javaType);
-    }
 }

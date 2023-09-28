@@ -23,13 +23,13 @@ import java.util.List;
  * @author LiAo
  * @since 2023-08-16
  */
-public class WebSpiderResolver<T> extends SpiderResolver {
+public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> {
 
     /**
      * 爬虫执行
      *
-     * @param spiderName 爬虫动作名称
      */
+    @Override
     public List<T> execute(String spiderName) {
         // 获取动作
         getSpiderActionConfig(spiderName);

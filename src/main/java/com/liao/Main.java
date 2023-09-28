@@ -1,5 +1,6 @@
 package com.liao;
 
+import com.liao.core.factory.ResolverFactory;
 import com.liao.core.spider.WebSpiderResolver;
 import com.liao.entity.ResultEntity;
 
@@ -31,7 +32,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        WebSpiderResolver<ResultEntity> jd = new WebSpiderResolver<>();
+        ResolverFactory<ResultEntity> jd = new ResolverFactory<>();
 
         List<ResultEntity> jd1 = jd.execute("jd");
 

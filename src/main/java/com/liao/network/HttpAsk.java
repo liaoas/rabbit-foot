@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.liao.utils.ConvertUtil;
+import com.liao.utils.ConvertUtils;
 import lombok.Data;
 
 import java.util.Map;
@@ -72,7 +72,7 @@ public class HttpAsk<T> {
 
         if (action.has("headers")) {
             // 将 JsonObject 转换为 Map
-            Map<String, String> result = ConvertUtil.JsonNodeToMapStrStr(action.get("headers"));
+            Map<String, String> result = ConvertUtils.JsonNodeToMapStrStr(action.get("headers"));
             for (Map.Entry<String, String> header : result.entrySet()) {
                 String key = header.getKey();
                 String value = header.getValue();
@@ -82,7 +82,7 @@ public class HttpAsk<T> {
 
         if (action.has("params")) {
             // 将 JsonObject 转换为 Map
-            Map<String, Object> result = ConvertUtil.JsonNodeToMapStrObj(action.get("params"));
+            Map<String, Object> result = ConvertUtils.JsonNodeToMapStrObj(action.get("params"));
 
             httpRequest = httpRequest.form(result);
         }

@@ -2,6 +2,7 @@
   "books": [
     {
       "name": "jd",
+      "type": "com.liao.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
         "url": "https://www.bizhi99.com/c2/",

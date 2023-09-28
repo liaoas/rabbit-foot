@@ -13,7 +13,7 @@ package com.liao.interceptors;
 public interface HandlerInterceptors<T> {
 
     /**
-     * 处理器
+     * 拦截器处理
      *
      * @param handler 需要处理的参数
      * @param prefix  需要处理的参数前缀

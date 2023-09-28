@@ -10,7 +10,7 @@ package com.liao.interceptors;
  */
 public class MyHandlerInterceptors implements HandlerInterceptors<String> {
     /**
-     * 前置处理器
+     * 拦截器处理
      *
      * @param handler 需要处理的参数
      * @param prefix  需要处理的参数前缀

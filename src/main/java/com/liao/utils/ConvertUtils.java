@@ -14,7 +14,7 @@ import java.util.Map;
  * @author LiAo
  * @since 2023-08-19
  */
-public class ConvertUtil {
+public class ConvertUtils {
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
