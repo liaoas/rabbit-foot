@@ -41,7 +41,7 @@ public class WebSpiderResolver<T> extends SpiderResolver {
         // 爬取目标网站内容
         requestWebPage(activeRes);
 
-        if (ObjUtil.isNull(this.document)) {
+        if (ObjUtil.isNull(this.webDocument)) {
             return null;
         }
 
@@ -97,7 +97,7 @@ public class WebSpiderResolver<T> extends SpiderResolver {
         if (StrUtil.isEmpty(content)) {
             return;
         }
-        this.document = Jsoup.parse(content);
+        this.webDocument = Jsoup.parse(content);
     }
 
     /**
@@ -117,7 +117,7 @@ public class WebSpiderResolver<T> extends SpiderResolver {
 
         ArrayNode arrayNode = resultMap.createArrayNode();
 
-        resolver(arrayNode, node, null, this.document, "obj");
+        resolver(arrayNode, node, null, this.webDocument, "obj");
 
         return arrayNode;
     }
@@ -321,15 +321,16 @@ public class WebSpiderResolver<T> extends SpiderResolver {
                 return;
             }
 
-            String text = action.get("target-key").asText();
+            String target = action.get("target-key").asText();
 
-            if (text.equals("text")) {
-                contentTemp.put(action.get("result-key").asText(), obj.text());
-
+            if (target.equals("text")) {
+                String text = obj.text();
+                contentTemp.put(action.get("result-key").asText(), interceptors(text, action));
             }
 
-            if (text.equals("src")) {
-                contentTemp.put(action.get("result-key").asText(), obj.attr("src"));
+            if (target.equals("src")) {
+                String src = obj.attr("src");
+                contentTemp.put(action.get("result-key").asText(), interceptors(src, action));
 
             }
 

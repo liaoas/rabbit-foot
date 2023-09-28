@@ -34,7 +34,12 @@
                   "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
-                  "result-key": "title"
+                  "result-key": "title",
+                  "interceptors": {
+                    "type": "com.liao.interceptors.MyHandlerInterceptors",
+                    "prefix": "prefix:-->>",
+                    "suffix": ":-->>:suffix"
+                  }
                 },
                 {
                   "element-type": "tage",
