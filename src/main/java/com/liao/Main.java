@@ -1,7 +1,6 @@
 package com.liao;
 
 import com.liao.core.factory.ResolverFactory;
-import com.liao.core.spider.WebSpiderResolver;
 import com.liao.entity.ResultEntity;
 
 import java.util.List;

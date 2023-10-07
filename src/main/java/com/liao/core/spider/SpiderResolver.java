@@ -56,7 +56,7 @@ public abstract class SpiderResolver extends ActionResources {
 
         JsonNode interceptorsNode = jsonNode.get("interceptors");
 
-        HandlerInterceptors<String> interceptors = (HandlerInterceptors<String> )BeanUtils.getBean(interceptorsNode);
+        HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>) BeanUtils.getBean(interceptorsNode);
 
         String prefix = interceptorsNode.get(PREFIX).asText();
         String suffix = interceptorsNode.get(SUFFIX).asText();

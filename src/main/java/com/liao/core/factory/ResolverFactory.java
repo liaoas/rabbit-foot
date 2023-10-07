@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2023-09-28
  */
 @SuppressWarnings("unchecked")
-public class ResolverFactory<T> extends ActionResources implements Resolver<T>{
+public class ResolverFactory<T> extends ActionResources implements Resolver<T> {
 
 
     /**
