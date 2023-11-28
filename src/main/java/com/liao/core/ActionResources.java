@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.liao.utils.ConvertUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -32,12 +33,12 @@ public abstract class ActionResources {
      *
      * @param name 爬虫名称
      */
-    public void getSpiderActionConfig(String name) {
+    public void getSpiderActionConfig(String name, String... params) {
         if (StrUtil.isEmpty(name)) {
             return;
         }
 
-        // 验证是否加载资源
+        // 验证是否成功加载资源
         isLoad();
 
         ArrayNode books = objectNode.withArray("books");
@@ -51,6 +52,30 @@ public abstract class ActionResources {
                 activeRes = book;
             }
         }
+
+        // 填充请求参数
+        httpParamBuild(params);
+    }
+
+    /**
+     * 根据通配符填充http参数
+     *
+     * @param params 参数
+     */
+    public void httpParamBuild(String... params) {
+
+        if (params == null || params.length == 0) {
+            return;
+        }
+
+        String activeResStr = ConvertUtils.jsonNodeToStr(activeRes);
+
+        for (int i = 0; i < params.length; i++) {
+            String matchCharacter = "{params[" + i + "]}";
+            activeResStr = activeResStr.replace(matchCharacter, params[i]);
+        }
+
+        activeRes = ConvertUtils.jsonStrToJsonNode(activeResStr);
     }
 
     /**

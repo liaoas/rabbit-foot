@@ -15,5 +15,5 @@ public interface Resolver<T> {
     /**
      * 爬虫执行
      */
-    List<T> execute(String spiderName);
+    List<T> execute(String spiderName,String... params);
 }

@@ -27,12 +27,11 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
     /**
      * 爬虫执行
-     *
      */
     @Override
-    public List<T> execute(String spiderName) {
+    public List<T> execute(String spiderName, String... params) {
         // 获取动作
-        getSpiderActionConfig(spiderName);
+        getSpiderActionConfig(spiderName, params);
 
         if (ObjUtil.isNull(activeRes)) {
             return null;

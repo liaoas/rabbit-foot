@@ -1,11 +1,9 @@
 package com.liao.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.liao.interceptors.HandlerInterceptors;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>
@@ -30,7 +28,7 @@ public class BeanUtils {
     public static Object getBean(JsonNode jsonNode) {
 
         if (jsonNode == null || !jsonNode.has("type")) {
-            throw new RuntimeException("Bean对象获取失败");
+            throw new RuntimeException("Bean对象获取失败，对象描述Json为空");
         }
 
         String javaType = jsonNode.get("type").asText();
@@ -53,11 +51,11 @@ public class BeanUtils {
             Object interceptors = Class.forName(javaType).newInstance();
             BEANS.put(javaType, interceptors);
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException("名为 " + javaType + " 的对象失败");
+            throw new RuntimeException("名为 " + javaType + " 的对象创建失败");
         }
 
         if (!BEANS.containsKey(javaType)) {
-            throw new RuntimeException("名为 " + javaType + " 的对象失败");
+            throw new RuntimeException("名为 " + javaType + " 的对象获取失败");
         }
 
         return BEANS.get(javaType);

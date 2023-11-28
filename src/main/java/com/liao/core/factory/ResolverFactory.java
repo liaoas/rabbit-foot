@@ -25,9 +25,9 @@ public class ResolverFactory<T> extends ActionResources implements Resolver<T> {
      * @return 爬虫结果
      */
     @Override
-    public List<T> execute(String spiderName) {
+    public List<T> execute(String spiderName, String... params) {
         getSpiderActionConfig(spiderName);
         Resolver<T> bean = (Resolver<T>) BeanUtils.getBean(activeRes);
-        return bean.execute(spiderName);
+        return bean.execute(spiderName, params);
     }
 }

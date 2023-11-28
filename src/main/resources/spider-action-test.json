@@ -10,7 +10,7 @@
           "Cookie": "此处填写京东登录Cookie"
         },
         "params": {
-          "keyword": "***"
+          "keyword": "{params[0]}"
         }
       },
       "resolver-action": {
@@ -50,7 +50,12 @@
                   "is-leaf": true,
                   "target-key": "src",
                   "result-key": "url",
-                  "result-end": true
+                  "result-end": true,
+                  "interceptors": {
+                    "type": "com.liao.interceptors.MyHandlerInterceptors",
+                    "prefix": "prefix:-->>",
+                    "suffix": ":-->>:suffix"
+                  }
                 }
               ]
             }

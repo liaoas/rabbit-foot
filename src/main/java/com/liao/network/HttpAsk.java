@@ -72,7 +72,7 @@ public class HttpAsk<T> {
 
         if (action.has("headers")) {
             // 将 JsonObject 转换为 Map
-            Map<String, String> result = ConvertUtils.JsonNodeToMapStrStr(action.get("headers"));
+            Map<String, String> result = ConvertUtils.jsonNodeToMapStrStr(action.get("headers"));
             for (Map.Entry<String, String> header : result.entrySet()) {
                 String key = header.getKey();
                 String value = header.getValue();
@@ -82,7 +82,7 @@ public class HttpAsk<T> {
 
         if (action.has("params")) {
             // 将 JsonObject 转换为 Map
-            Map<String, Object> result = ConvertUtils.JsonNodeToMapStrObj(action.get("params"));
+            Map<String, Object> result = ConvertUtils.jsonNodeToMapStrObj(action.get("params"));
 
             httpRequest = httpRequest.form(result);
         }

@@ -6,21 +6,19 @@ import com.liao.entity.ResultEntity;
 import java.util.List;
 
 /**
- *
- *
- * //    {
- * //      "site": {
- * //        "method": "POST",
- * //        "url": "http://localhost:80/job/post-test",
- * //        "headers": {
- * //          "Cookie": "application/json",
- * //          "Authorization": "Bearer your_access_token_here"
- * //        },
- * //        "body": {
- * //          "keyword": "三体"
- * //        }
- * //      }
- * //    }
+ *     {
+ *       "site": {
+ *         "method": "POST",
+ *         "url": "http:localhost:80/job/post-test",
+ *         "headers": {
+ *           "Cookie": "application/json",
+ *           "Authorization": "Bearer your_access_token_here"
+ *         },
+ *         "body": {
+ *           "keyword": "三体"
+ *         }
+ *       }
+ *     }
  * <p>
  * JsonSpiderBuild
  * </p>
@@ -33,7 +31,7 @@ public class Main {
 
         ResolverFactory<ResultEntity> jd = new ResolverFactory<>();
 
-        List<ResultEntity> jd1 = jd.execute("jd");
+        List<ResultEntity> jd1 = jd.execute("jd", "剑来");
 
         System.out.println();
     }
