@@ -1,24 +1,25 @@
 package com.rabbit.foot;
 
+import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.core.factory.ResolverFactory;
 import com.rabbit.foot.entity.ResultEntity;
 
 import java.util.List;
 
 /**
- *     {
- *       "site": {
- *         "method": "POST",
- *         "url": "http:localhost:80/job/post-test",
- *         "headers": {
- *           "Cookie": "application/json",
- *           "Authorization": "Bearer your_access_token_here"
- *         },
- *         "body": {
- *           "keyword": "三体"
- *         }
- *       }
+ * {
+ *   "site": {
+ *     "method": "POST",
+ *     "url": "http:localhost:80/job/post-test",
+ *     "headers": {
+ *       "Cookie": "application/json",
+ *       "Authorization": "Bearer your_access_token_here"
+ *     },
+ *     "body": {
+ *       "keyword": "三体"
  *     }
+ *   }
+ * }
  * <p>
  * JsonSpiderBuild
  * </p>
@@ -29,9 +30,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        ResolverFactory<ResultEntity> jd = new ResolverFactory<>("jd");
+        // ResolverFactory<ResultEntity> jd = new ResolverFactory<>("jd","剑来");
 
-        List<ResultEntity> jd1 = jd.execute("剑来");
+        ResolverFactory<ResultEntity> jd = new ResolverFactory<>(ActionResources.class.getClassLoader().getResource("spider-action-test.json"), "jd", "剑来");
+
+        List<ResultEntity> jd1 = jd.capture();
 
         System.out.println();
     }

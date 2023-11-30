@@ -21,24 +21,24 @@ public class ResolverFactory<T> extends ActionResources {
     private ResolverFactory() {
     }
 
-    public ResolverFactory(String spiderName) {
+    public ResolverFactory(String spiderName, String... params) {
         super.spiderName = spiderName;
-        getSpiderActionConfigByName();
+        getSpiderActionConfigByName(params);
     }
 
-    public ResolverFactory(URL url) {
+    public ResolverFactory(URL url, String spiderName, String... params) {
         super.url = url;
-        getSpiderActionConfigByUrl();
+        super.spiderName = spiderName;
+        getSpiderActionConfigByUrl(params);
     }
 
 
     /**
      * 爬虫执行
      *
-     * @param params 爬虫http请求参数
      * @return 爬虫结果
      */
-    public List<T> execute(String... params) {
+    public List<T> capture() {
         Resolver<T> bean = (Resolver<T>) BeanUtils.getBean(activeRes);
         return bean.execute(activeRes);
     }
