@@ -2,7 +2,7 @@
   "books": [
     {
       "name": "jd",
-      "type": "com.liao.core.spider.WebSpiderResolver",
+      "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
         "url": "https://www.bizhi99.com/c2/",
@@ -37,7 +37,7 @@
                   "target-key": "text",
                   "result-key": "title",
                   "interceptors": {
-                    "type": "com.liao.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
                     "prefix": "prefix:-->>",
                     "suffix": ":-->>:suffix"
                   }
@@ -52,7 +52,7 @@
                   "result-key": "url",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.liao.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
                     "prefix": "prefix:-->>",
                     "suffix": ":-->>:suffix"
                   }
@@ -63,7 +63,7 @@
         }
       },
       "config": {
-        "java-type": "com.liao.entity.ResultEntity"
+        "java-type": "com.rabbit.foot.entity.ResultEntity"
       }
     }
   ]
