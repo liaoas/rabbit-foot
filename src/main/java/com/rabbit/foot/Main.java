@@ -29,9 +29,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        ResolverFactory<ResultEntity> jd = new ResolverFactory<>();
+        ResolverFactory<ResultEntity> jd = new ResolverFactory<>("jd");
 
-        List<ResultEntity> jd1 = jd.execute("jd", "剑来");
+        List<ResultEntity> jd1 = jd.execute("剑来");
 
         System.out.println();
     }

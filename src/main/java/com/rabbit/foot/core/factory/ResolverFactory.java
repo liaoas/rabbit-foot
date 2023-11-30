@@ -4,6 +4,7 @@ import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.core.spider.Resolver;
 import com.rabbit.foot.utils.BeanUtils;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -15,19 +16,30 @@ import java.util.List;
  * @since 2023-09-28
  */
 @SuppressWarnings("unchecked")
-public class ResolverFactory<T> extends ActionResources implements Resolver<T> {
+public class ResolverFactory<T> extends ActionResources {
+
+    private ResolverFactory() {
+    }
+
+    public ResolverFactory(String spiderName) {
+        super.spiderName = spiderName;
+        getSpiderActionConfigByName();
+    }
+
+    public ResolverFactory(URL url) {
+        super.url = url;
+        getSpiderActionConfigByUrl();
+    }
 
 
     /**
      * 爬虫执行
      *
-     * @param spiderName 爬虫资源名称
+     * @param params 爬虫http请求参数
      * @return 爬虫结果
      */
-    @Override
-    public List<T> execute(String spiderName, String... params) {
-        getSpiderActionConfig(spiderName);
+    public List<T> execute(String... params) {
         Resolver<T> bean = (Resolver<T>) BeanUtils.getBean(activeRes);
-        return bean.execute(spiderName, params);
+        return bean.execute(activeRes);
     }
 }

@@ -23,6 +23,10 @@ import java.net.URL;
 @Slf4j
 public abstract class ActionResources {
 
+    public String spiderName;
+
+    public URL url;
+
     protected volatile ObjectNode objectNode = null;
 
     // 当前使用的爬虫动作
@@ -30,17 +34,36 @@ public abstract class ActionResources {
 
     /**
      * 获取指定名称的爬虫描述
-     *
-     * @param name 爬虫名称
      */
-    public void getSpiderActionConfig(String name, String... params) {
-        if (StrUtil.isEmpty(name)) {
+    public void getSpiderActionConfigByName(String... params) {
+        if (StrUtil.isEmpty(spiderName)) {
             return;
         }
 
-        // 验证是否成功加载资源
-        isLoad();
+        loadSpiderAction();
 
+        getSpiderActionConfig(params);
+    }
+
+    /**
+     * 获取指定名称的爬虫描述
+     */
+    public void getSpiderActionConfigByUrl(String... params) {
+        if (ObjUtil.isEmpty(url)) {
+            return;
+        }
+        // 验证是否成功加载资源
+        loadUrlSpiderAction();
+
+        getSpiderActionConfig(params);
+    }
+
+    /**
+     * 获取指定名称的爬虫动作
+     *
+     * @param params 爬虫http填充
+     */
+    private void getSpiderActionConfig(String... params) {
         ArrayNode books = objectNode.withArray("books");
 
         if (books.size() <= 0) {
@@ -48,7 +71,7 @@ public abstract class ActionResources {
         }
 
         for (JsonNode book : books) {
-            if (name.equals(book.get("name").asText())) {
+            if (spiderName.equals(book.get("name").asText())) {
                 activeRes = book;
             }
         }
@@ -79,15 +102,6 @@ public abstract class ActionResources {
     }
 
     /**
-     * 是否加载爬虫动作
-     */
-    public void isLoad() {
-        if (objectNode == null) {
-            loadSpiderAction();
-        }
-    }
-
-    /**
      * 加载爬虫动作
      */
     private void loadSpiderAction() {
@@ -108,6 +122,32 @@ public abstract class ActionResources {
 
                     try {
                         objectNode = mapper.readValue(resource, ObjectNode.class);
+                    } catch (IOException e) {
+                        log.error("爬虫资源 spider-action-test.json 读取失败");
+                    }
+
+                    if (ObjUtil.isNull(objectNode)) {
+                        throw new NullPointerException("爬虫资源 spider-action-test.json 读取为空");
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 加载爬虫动作
+     */
+    private void loadUrlSpiderAction() {
+
+        if (objectNode == null) {
+
+            synchronized (ActionResources.class) {
+                if (objectNode == null) {
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    try {
+                        objectNode = mapper.readValue(url, ObjectNode.class);
                     } catch (IOException e) {
                         log.error("爬虫资源 spider-action-test.json 读取失败");
                     }

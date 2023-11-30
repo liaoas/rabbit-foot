@@ -1,5 +1,7 @@
 package com.rabbit.foot.core.spider;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
 
 /**
@@ -15,5 +17,5 @@ public interface Resolver<T> {
     /**
      * 爬虫执行
      */
-    List<T> execute(String spiderName,String... params);
+    List<T> execute(JsonNode activeRes);
 }

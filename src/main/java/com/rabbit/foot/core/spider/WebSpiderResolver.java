@@ -29,9 +29,9 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * 爬虫执行
      */
     @Override
-    public List<T> execute(String spiderName, String... params) {
+    public List<T> execute(JsonNode activeRes) {
         // 获取动作
-        getSpiderActionConfig(spiderName, params);
+        super.activeRes = activeRes;
 
         if (ObjUtil.isNull(activeRes)) {
             return null;
