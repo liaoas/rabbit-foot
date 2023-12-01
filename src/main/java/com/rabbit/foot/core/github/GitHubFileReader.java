@@ -27,6 +27,18 @@ public class GitHubFileReader {
     /**
      * 读取GitHub指定仓库的指定文件夹
      *
+     * @param owner 用户名
+     * @param repo  仓库名称
+     * @param path  文件路径
+     * @return 文件内容
+     */
+    public static String getFileContent(String owner, String repo, String path) {
+        return getFileContent(owner, repo, path, null);
+    }
+
+    /**
+     * 读取GitHub指定仓库的指定文件夹
+     *
      * @param owner       用户名
      * @param repo        仓库名称
      * @param path        文件路径
@@ -70,7 +82,7 @@ public class GitHubFileReader {
     }
 
     /**
-     * 读取 github 返回的文件内容，并解密
+     * 读取 github 返回的文件内容，并解密Base64
      *
      * @param jsonResponse github返回的内容
      * @return 文件内容
@@ -87,6 +99,7 @@ public class GitHubFileReader {
             throw new RuntimeException(e);
         }
         String base64Content = jsonNode.get("content").asText();
+
         base64Content = base64Content.replaceAll("\\\\n", "");
 
         byte[] decodedBytes;

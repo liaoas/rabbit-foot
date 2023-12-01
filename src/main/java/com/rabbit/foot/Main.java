@@ -8,17 +8,17 @@ import java.util.List;
 
 /**
  * {
- *   "site": {
- *     "method": "POST",
- *     "url": "http:localhost:80/job/post-test",
- *     "headers": {
- *       "Cookie": "application/json",
- *       "Authorization": "Bearer your_access_token_here"
- *     },
- *     "body": {
- *       "keyword": "三体"
- *     }
- *   }
+ * "site": {
+ * "method": "POST",
+ * "url": "http:localhost:80/job/post-test",
+ * "headers": {
+ * "Cookie": "application/json",
+ * "Authorization": "Bearer your_access_token_here"
+ * },
+ * "body": {
+ * "keyword": "三体"
+ * }
+ * }
  * }
  * <p>
  * JsonSpiderBuild
@@ -30,9 +30,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        // ResolverFactory<ResultEntity> jd = new ResolverFactory<>("jd","剑来");
+        ResolverFactory<ResultEntity> jd = new ResolverFactory<>("壁纸网", "search", "剑来");
 
-        ResolverFactory<ResultEntity> jd = new ResolverFactory<>(ActionResources.class.getClassLoader().getResource("spider-action-test.json"), "jd", "剑来");
+        // ResolverFactory<ResultEntity> jd = new ResolverFactory<>(ActionResources.class.getClassLoader().getResource("spider-action-test.json"), "壁纸网", "search", "剑来");
 
         List<ResultEntity> jd1 = jd.capture();
 
