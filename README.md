@@ -134,12 +134,12 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
 
 ```json
 {
-  "books": [    									// 爬虫集合
+  "books": [
     {
       "name": "爬虫分组名称，统一分组下可用同一个名字",
       "spider-type": "爬虫类型，同一个分组下不可以重复",
       "type": "指定解析的爬虫",
-      "site": {										// 请求描述
+      "site": {
         "method": "请求方式",			
         "url": "请求路径",
         "headers": {
