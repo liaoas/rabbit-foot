@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -122,10 +123,10 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
     }
 
     /**
-     * 内容解析
+     * 递归解析HTML节点
      *
      * @param content  用于存储爬虫的结果内容
-     * @param action   动作
+     * @param action   动作描述
      * @param arr      爬虫进度指针 多节点
      * @param obj      爬虫进度指针 单节点
      * @param lastType 上次节点类型
@@ -217,7 +218,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
     }
 
     /**
-     * 递归解析结果节点描述部分并组装成对象
+     * 递归解析结果节点描述部分并组装成结果对象
      *
      * @param contentTemp 单个结果对象
      * @param action      动作
@@ -280,7 +281,11 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             case "class":
                 if (action.has("leaf-index")) {
                     int anInt = action.get("leaf-index").asInt();
-                    obj = element.getElementsByClass(elementValue).get(anInt);
+                    try {
+                        obj = element.getElementsByClass(elementValue).get(anInt);
+                    } catch (Exception e) {
+                        return;
+                    }
 
                     results2Json(contentTemp, action, obj, lastType);
 
@@ -293,7 +298,12 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             case "tage":
                 if (action.has("leaf-index")) {
                     int anInt = action.get("leaf-index").asInt();
-                    obj = element.getElementsByTag(elementValue).get(anInt);
+
+                    try {
+                        obj = element.getElementsByTag(elementValue).get(anInt);
+                    } catch (Exception e) {
+                        return;
+                    }
 
                     results2Json(contentTemp, action, obj, lastType);
 
@@ -325,14 +335,10 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             if (target.equals("text")) {
                 String text = obj.text();
                 contentTemp.put(action.get("result-key").asText(), interceptors(text, action));
+            } else {
+                String attribute = obj.attr(target);
+                contentTemp.put(action.get("result-key").asText(), interceptors(attribute, action));
             }
-
-            if (target.equals("src")) {
-                String src = obj.attr("src");
-                contentTemp.put(action.get("result-key").asText(), interceptors(src, action));
-
-            }
-
         }
         lastType = "obj";
     }

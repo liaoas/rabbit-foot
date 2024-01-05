@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.rabbit.foot.utils.ConvertUtils;
 import lombok.Data;
 
+import javax.net.ssl.SSLContext;
 import java.util.Map;
 
 /**
@@ -101,7 +102,8 @@ public class HttpAsk<T> {
      */
     private T get(HttpRequest httpRequest) {
 
-        String body = httpRequest.method(Method.GET).execute().body();
+        String body = httpRequest.method(Method.GET)
+                .execute().body();
 
         return (T) body;
     }

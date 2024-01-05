@@ -14,27 +14,33 @@ public class ResultEntity {
 
     private String url;
 
+    private String author;
+
+    private String newChapter;
+
     public ResultEntity() {
     }
 
-    public ResultEntity(String title, String url) {
+    public ResultEntity(String title, String url, String author, String newChapter) {
         this.title = title;
         this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
+        this.author = author;
+        this.newChapter = newChapter;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setNewChapter(String newChapter) {
+        this.newChapter = newChapter;
     }
 }
