@@ -23,6 +23,12 @@
             "element-type": "tage",
             "element-value": "tr",
             "content-type": "array",
+            "remove": [
+              {
+                "element-type": "align",
+                "element-value": "center"
+              }
+            ],
             "element": {
               "element-type": "result",
               "element-value": "item",
@@ -90,12 +96,6 @@
                     "prefix": "",
                     "suffix": ""
                   }
-                }
-              ],
-              "remove": [
-                {
-                  "element-type": "class",
-                  "element-value": "grid"
                 }
               ]
             }

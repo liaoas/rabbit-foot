@@ -149,6 +149,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                 case "class":
                     arr = obj.getElementsByClass(elementValue);
                     lastType = "arr";
+                    nodeFiltering(action, arr);
                     break;
             }
         } else {
@@ -161,6 +162,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                         } else {
                             obj = element.getElementById(elementValue);
                             lastType = "arr";
+
                         }
                         break;
                     case "class":
@@ -171,6 +173,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                         } else {
                             arr = element.getElementsByClass(elementValue);
                             lastType = "arr";
+                            nodeFiltering(action, arr);
                         }
                         break;
 
@@ -182,6 +185,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                         } else {
                             arr = element.getElementsByTag(elementValue);
                             lastType = "arr";
+                            nodeFiltering(action, arr);
                         }
 
                         break;
@@ -292,6 +296,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                 } else {
                     arr = element.getElementsByClass(elementValue);
                     lastType = "arr";
+                    nodeFiltering(action, arr);
                 }
                 break;
 
@@ -310,6 +315,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                 } else {
                     arr = element.getElementsByTag(elementValue);
                     lastType = "arr";
+                    nodeFiltering(action, arr);
                 }
                 break;
         }

@@ -1,14 +1,20 @@
 package com.rabbit.foot.core.spider;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.interceptors.HandlerInterceptors;
 import com.rabbit.foot.utils.BeanUtils;
 import com.rabbit.foot.core.ActionResources;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -63,6 +69,81 @@ public abstract class SpiderResolver extends ActionResources {
         String suffix = interceptorsNode.get(SUFFIX).asText();
 
         return interceptors.handle(handler, prefix, suffix);
+    }
+
+    /**
+     * 节点过滤，删除非结果内容节点，如 Table 标题，防止结果结合出现属性为空的对象
+     *
+     * @param jsonNode 过滤规则
+     * @param elements 节点集合
+     */
+    public void nodeFiltering(JsonNode jsonNode, Elements elements) {
+        if (jsonNode == null || !jsonNode.has("remove") || elements == null || elements.isEmpty()) {
+            return;
+        }
+
+        ArrayNode removeArrayNode = jsonNode.withArray("remove");
+
+        Iterator<Element> iterator = elements.iterator();
+
+        while (iterator.hasNext()) {
+            Element element = iterator.next();
+
+            for (JsonNode action : removeArrayNode) {
+
+                String elementType = action.get("element-type").asText();
+
+                String elementValue = action.get("element-value").asText();
+                switch (elementType) {
+                    case "id":
+                        Element elementById = element.getElementById(elementValue);
+
+                        if (elementById != null) {
+                            iterator.remove();
+                            continue;
+                        }
+                        break;
+                    case "class":
+                        try {
+                            Elements elementsByClass = element.getElementsByClass(elementValue);
+                            if (!elementsByClass.isEmpty()) {
+                                iterator.remove();
+                                continue;
+                            }
+                        } catch (Exception e) {
+                            continue;
+                        }
+                        iterator.remove();
+                        break;
+
+                    case "tage":
+                        try {
+                            Elements elementsByTag = element.getElementsByTag(elementValue);
+                            if (!elementsByTag.isEmpty()) {
+                                iterator.remove();
+                                continue;
+                            }
+                        } catch (Exception e) {
+                            continue;
+                        }
+                        iterator.remove();
+                        break;
+                    default:
+                        try {
+                            String attr = element.attr(elementType);
+                            if (attr.equals(elementValue)) {
+                                iterator.remove();
+                                continue;
+                            }
+                        } catch (Exception e) {
+                            continue;
+                        }
+                        break;
+                }
+            }
+        }
+
+
     }
 
 }
