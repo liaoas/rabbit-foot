@@ -1,5 +1,7 @@
 package com.rabbit.foot.entity;
 
+import lombok.Data;
+
 /**
  * <p>
  * 结果实体类，用于测试
@@ -17,16 +19,6 @@ public class ResultEntity {
     private String author;
 
     private String newChapter;
-
-    public ResultEntity() {
-    }
-
-    public ResultEntity(String title, String url, String author, String newChapter) {
-        this.title = title;
-        this.url = url;
-        this.author = author;
-        this.newChapter = newChapter;
-    }
 
     public void setTitle(String title) {
         this.title = title;

@@ -5,9 +5,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rabbit.foot.utils.ConvertUtils;
-import lombok.Data;
 
-import javax.net.ssl.SSLContext;
 import java.util.Map;
 
 /**
@@ -18,18 +16,15 @@ import java.util.Map;
  * @author LiAo
  * @since 2023-08-07
  */
-@Data
 @SuppressWarnings("unchecked")
 public class HttpAsk<T> {
-
-    private T data;
 
     private static final String GET = "GET";
 
     private static final String POST = "POST";
 
     // 存储 Http 请求动作
-    private JsonNode action;
+    private final JsonNode action;
 
     public HttpAsk(JsonNode action) {
         this.action = action;

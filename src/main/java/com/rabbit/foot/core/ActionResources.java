@@ -20,7 +20,6 @@ import java.net.URL;
  * @author LiAo
  * @since 2023-08-03
  */
-@Slf4j
 public abstract class ActionResources {
 
     public URL url;
