@@ -37,6 +37,11 @@ public class Resources {
         return objectNode;
     }
 
+    public static ObjectNode getObjectNode(String jsonStr) {
+        loadSpiderAction(jsonStr);
+        return objectNode;
+    }
+
 
     /**
      * 加载爬虫动作
@@ -86,11 +91,36 @@ public class Resources {
                     try {
                         objectNode = mapper.readValue(url, ObjectNode.class);
                     } catch (IOException e) {
-                        log.error("爬虫资源 spider-action-test.json 读取失败");
+                        log.error("爬虫资源 {} 读取失败", url.getUserInfo());
                     }
 
                     if (ObjUtil.isNull(objectNode)) {
-                        throw new NullPointerException("爬虫资源 spider-action-test.json 读取为空");
+                        throw new NullPointerException("爬虫资源 " + url.getUserInfo() + " 读取为空");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 加载爬虫动作
+     */
+    private static void loadSpiderAction(String jsonStr) {
+
+        if (objectNode == null) {
+
+            synchronized (ActionResources.class) {
+                if (objectNode == null) {
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    try {
+                        objectNode = mapper.readValue(jsonStr, ObjectNode.class);
+                    } catch (IOException e) {
+                        log.error("爬虫资源加载失败");
+                    }
+
+                    if (ObjUtil.isNull(objectNode)) {
+                        throw new NullPointerException("爬虫资源加载失败");
                     }
                 }
             }

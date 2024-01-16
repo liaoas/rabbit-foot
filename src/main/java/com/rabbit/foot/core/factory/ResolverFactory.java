@@ -21,17 +21,24 @@ public class ResolverFactory<T> extends ActionResources {
     private ResolverFactory() {
     }
 
-    public ResolverFactory(String spiderName, String spiderType, String... params) {
+    /*public ResolverFactory(String spiderName, String spiderType, String... params) {
         super.spiderName = spiderName;
         super.spiderType = spiderType;
         getSpiderActionConfigByName(params);
-    }
+    }*/
 
     public ResolverFactory(URL url, String spiderName, String spiderType, String... params) {
         super.url = url;
         super.spiderName = spiderName;
         super.spiderType = spiderType;
         getSpiderActionConfigByUrl(params);
+    }
+
+    public ResolverFactory(String jsonStr, String spiderName, String spiderType, String... params) {
+        super.jsonString = jsonStr;
+        super.spiderName = spiderName;
+        super.spiderType = spiderType;
+        getSpiderActionConfigByStr(params);
     }
 
 

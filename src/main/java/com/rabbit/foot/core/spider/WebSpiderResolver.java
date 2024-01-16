@@ -15,6 +15,8 @@ import org.jsoup.select.Elements;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>
@@ -71,11 +73,15 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         try {
             Class<?> Clazz = Class.forName(javaType);
 
+            if (Clazz.getName().equals(String.class.getName())) {
+                List<String> value = IntStream.range(0, arrayNode.size()).mapToObj(index -> arrayNode.get(index).get("value").asText()).collect(Collectors.toList());
+
+                return (List<T>) value;
+            }
+
             ObjectMapper objectMapper = new ObjectMapper();
 
-            return objectMapper
-                    .readerForListOf(Clazz)
-                    .readValue(arrayNode.toString());
+            return objectMapper.readerForListOf(Clazz).readValue(arrayNode.toString());
         } catch (ClassNotFoundException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -150,6 +156,27 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     arr = obj.getElementsByClass(elementValue);
                     lastType = "arr";
                     nodeFiltering(action, arr);
+                    break;
+                case "tage":
+                    arr = obj.getElementsByTag(elementValue);
+                    lastType = "arr";
+                    nodeFiltering(action, arr);
+                    break;
+                case "result":
+                    // 判断结果伪动作，标记开始组装结果
+                    if (!action.has("result-element")) {
+                        break;
+                    }
+
+                    ArrayNode arrayNode = action.withArray("result-element");
+
+                    ObjectNode objectNode = new ObjectMapper().createObjectNode();
+
+                    for (JsonNode jsonNode : arrayNode) {
+                        packageAssembly(objectNode, jsonNode, null, obj, "obj");
+                    }
+
+                    content.add(objectNode);
                     break;
             }
         } else {
@@ -267,8 +294,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * @param obj          存储本次解析返回的节点对象，用作下一次递归
      * @param lastType     下一次解析类型
      */
-    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue,
-                                       Element element, Elements arr, Element obj, String lastType) {
+    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue, Element element, Elements arr, Element obj, String lastType) {
         switch (elementType) {
             case "id":
                 if (action.has("leaf-index")) {
@@ -317,6 +343,15 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     lastType = "arr";
                     nodeFiltering(action, arr);
                 }
+                break;
+            case "content":
+                try {
+                    obj = element;
+                } catch (Exception e) {
+                    return;
+                }
+
+                results2Json(contentTemp, action, obj, lastType);
                 break;
         }
     }

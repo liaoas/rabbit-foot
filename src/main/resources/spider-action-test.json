@@ -107,27 +107,27 @@
       }
     },
     {
-      "name": "笔趣阁",
-      "spider-type": "search",
+      "name": "新笔趣阁",
+      "spider-type": "chapter",
       "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
-        "url": "https://www.bizhi99.com/c2/",
+        "url": "http://localhost/efg/index.html",
         "headers": {
           "Cookie": "此处填写京东登录Cookie"
         },
         "params": {
-          "keyword": "{params[0]}"
+          "searchkey": "{params[0]}"
         }
       },
       "resolver-action": {
         "element": {
           "element-type": "class",
-          "element-value": "flex-img auto mt",
+          "element-value": "pc_list",
           "content-type": "array",
           "element": {
-            "element-type": "class",
-            "element-value": "item",
+            "element-type": "tage",
+            "element-value": "li",
             "content-type": "array",
             "element": {
               "element-type": "result",
@@ -136,32 +136,32 @@
               "start-assembly": true,
               "result-element": [
                 {
-                  "element-type": "class",
-                  "element-value": "title",
+                  "element-type": "tage",
+                  "element-value": "a",
                   "content-type": "obj",
                   "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
-                  "result-key": "title",
+                  "result-key": "name",
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
-                    "prefix": "prefix:-->>",
-                    "suffix": ":-->>:suffix"
+                    "prefix": "",
+                    "suffix": ""
                   }
                 },
                 {
                   "element-type": "tage",
-                  "element-value": "img",
+                  "element-value": "a",
                   "content-type": "obj",
                   "leaf-index": 0,
                   "is-leaf": true,
-                  "target-key": "src",
-                  "result-key": "href",
+                  "target-key": "href",
+                  "result-key": "link",
                   "result-end": true,
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
-                    "prefix": "prefix:-->>",
-                    "suffix": ":-->>:suffix"
+                    "prefix": "",
+                    "suffix": ""
                   }
                 }
               ]
@@ -170,7 +170,53 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.ResultEntity"
+        "java-type": "com.rabbit.foot.entity.Chapter"
+      }
+    },
+    {
+      "name": "新笔趣阁",
+      "spider-type": "content",
+      "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
+      "site": {
+        "method": "GET",
+        "url": "http://localhost/hig/index.html",
+        "headers": {
+          "Cookie": "此处填写京东登录Cookie"
+        },
+        "params": {
+          "searchkey": "{params[0]}"
+        }
+      },
+      "resolver-action": {
+        "element": {
+          "element-type": "id",
+          "element-value": "content1",
+          "content-type": "obj",
+          "element": {
+            "element-type": "result",
+            "element-value": "item",
+            "content-type": "obj",
+            "start-assembly": true,
+            "result-element": [
+              {
+                "element-type": "content",
+                "element-value": "content",
+                "leaf-index": 0,
+                "is-leaf": true,
+                "target-key": "text",
+                "result-key": "value",
+                "interceptors": {
+                  "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                  "prefix": "",
+                  "suffix": ""
+                }
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "java-type": "java.lang.String"
       }
     }
   ]

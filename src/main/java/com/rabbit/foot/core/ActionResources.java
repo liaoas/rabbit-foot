@@ -25,6 +25,8 @@ public abstract class ActionResources {
 
     public URL url;
 
+    public String jsonString;
+
     public String spiderName;
 
     public String spiderType;
@@ -52,6 +54,17 @@ public abstract class ActionResources {
         }
 
         getSpiderActionConfig(Resources.getObjectNode(url), params);
+    }
+
+    /**
+     * 获取指定名称的爬虫描述
+     */
+    public void getSpiderActionConfigByStr(String... params) {
+        if (ObjUtil.isEmpty(jsonString)) {
+            return;
+        }
+
+        getSpiderActionConfig(Resources.getObjectNode(jsonString), params);
     }
 
     /**
