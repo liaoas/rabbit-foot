@@ -117,7 +117,7 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.ResultEntity"
+        "java-type": "com.liao.book.entity.BookData"
       }
     },
     {
