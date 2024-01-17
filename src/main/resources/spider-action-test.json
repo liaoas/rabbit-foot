@@ -184,7 +184,7 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.Chapter"
+        "java-type": "com.liao.book.entity.Chapter"
       }
     },
     {
