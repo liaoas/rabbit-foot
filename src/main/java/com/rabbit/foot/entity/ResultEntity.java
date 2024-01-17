@@ -1,7 +1,5 @@
 package com.rabbit.foot.entity;
 
-import lombok.Data;
-
 /**
  * <p>
  * 结果实体类，用于测试

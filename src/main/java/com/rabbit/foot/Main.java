@@ -1,6 +1,7 @@
 package com.rabbit.foot;
 
 import com.rabbit.foot.core.factory.ResolverFactory;
+import com.rabbit.foot.core.github.GitHubFileReader;
 import com.rabbit.foot.entity.Chapter;
 import com.rabbit.foot.entity.ResultEntity;
 
@@ -40,9 +41,13 @@ public class Main {
         ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"), "新笔趣阁", "chapter", "剑来");
         ResolverFactory<String> rf3 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"), "新笔趣阁", "content", "剑来");
 
-        List<ResultEntity> re1 = rf1.capture();
+        /*List<ResultEntity> re1 = rf1.capture();
         List<Chapter> re2 = rf2.capture();
-        List<String> re3 = rf3.capture();
+        List<String> re3 = rf3.capture();*/
+
+        System.out.println();
+
+        String liaoas = GitHubFileReader.getFileContent("liaoas", "rabbit-foot", "src/main/resources/spider-action-test.json");
 
         System.out.println();
     }

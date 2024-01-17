@@ -42,7 +42,7 @@
                   "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
-                  "result-key": "title",
+                  "result-key": "bookName",
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
                     "prefix": "",
@@ -60,7 +60,7 @@
                     "leaf-index": 0,
                     "is-leaf": true,
                     "target-key": "href",
-                    "result-key": "url",
+                    "result-key": "bookLink",
                     "result-end": true,
                     "interceptors": {
                       "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
@@ -90,7 +90,21 @@
                   "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
-                  "result-key": "newChapter",
+                  "result-key": "chapter",
+                  "interceptors": {
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "prefix": "",
+                    "suffix": ""
+                  }
+                },
+                {
+                  "element-type": "class",
+                  "element-value": "odd",
+                  "content-type": "obj",
+                  "leaf-index": 1,
+                  "is-leaf": true,
+                  "target-key": "text",
+                  "result-key": "updateDate",
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
                     "prefix": "",

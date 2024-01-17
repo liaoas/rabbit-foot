@@ -3,13 +3,10 @@ package com.rabbit.foot.core;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.utils.ConvertUtils;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.net.URL;
 
 /**

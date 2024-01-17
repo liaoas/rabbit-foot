@@ -1,8 +1,5 @@
 package com.rabbit.foot.entity;
 
-import lombok.Data;
-import lombok.Getter;
-
 /**
  * <p>
  *

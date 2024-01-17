@@ -1,14 +1,10 @@
 package com.rabbit.foot.core.spider;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.interceptors.HandlerInterceptors;
 import com.rabbit.foot.utils.BeanUtils;
-import com.rabbit.foot.core.ActionResources;
-import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
