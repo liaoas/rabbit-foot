@@ -70,6 +70,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
         String javaType = configObj.get("java-type").asText();
         try {
+
             Class<?> Clazz = Class.forName(javaType);
 
             if (Clazz.getName().equals(String.class.getName())) {

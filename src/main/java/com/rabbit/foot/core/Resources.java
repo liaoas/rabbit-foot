@@ -1,6 +1,7 @@
 package com.rabbit.foot.core;
 
 import cn.hutool.core.util.ObjUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -26,6 +27,8 @@ public class Resources {
     private final static Logger log = LoggerFactory.getLogger(Resources.class);
 
     private static ObjectNode objectNode = null;
+
+    private static final String errorRule = "{\"rule\":\"error\"}";
 
     public static ObjectNode getObjectNode() {
         loadSpiderAction();
@@ -82,22 +85,23 @@ public class Resources {
      */
     private static void loadSpiderAction(URL url) {
 
-        if (objectNode == null) {
 
-            synchronized (ActionResources.class) {
-                if (objectNode == null) {
-                    ObjectMapper mapper = new ObjectMapper();
+        synchronized (ActionResources.class) {
+            ObjectMapper mapper = new ObjectMapper();
 
-                    try {
-                        objectNode = mapper.readValue(url, ObjectNode.class);
-                    } catch (IOException e) {
-                        log.error("爬虫资源 {} 读取失败", url.getUserInfo());
-                    }
-
-                    if (ObjUtil.isNull(objectNode)) {
-                        throw new NullPointerException("爬虫资源 " + url.getUserInfo() + " 读取为空");
-                    }
+            try {
+                objectNode = mapper.readValue(url, ObjectNode.class);
+            } catch (IOException e) {
+                log.error("爬虫资源读取失败 -> {}", url.getUserInfo());
+                try {
+                    objectNode = mapper.readValue(errorRule, ObjectNode.class);
+                } catch (JsonProcessingException ex) {
+                    log.error("爬虫资源加载失败,设置默认值 -> {}", errorRule);
                 }
+            }
+
+            if (ObjUtil.isNull(objectNode)) {
+                throw new NullPointerException("爬虫资源 " + url.getUserInfo() + " 读取为空");
             }
         }
     }
@@ -107,22 +111,22 @@ public class Resources {
      */
     private static void loadSpiderAction(String jsonStr) {
 
-        if (objectNode == null) {
+        synchronized (ActionResources.class) {
+            ObjectMapper mapper = new ObjectMapper();
 
-            synchronized (ActionResources.class) {
-                if (objectNode == null) {
-                    ObjectMapper mapper = new ObjectMapper();
-
-                    try {
-                        objectNode = mapper.readValue(jsonStr, ObjectNode.class);
-                    } catch (IOException e) {
-                        log.error("爬虫资源加载失败");
-                    }
-
-                    if (ObjUtil.isNull(objectNode)) {
-                        throw new NullPointerException("爬虫资源加载失败");
-                    }
+            try {
+                objectNode = mapper.readValue(jsonStr, ObjectNode.class);
+            } catch (IOException e) {
+                log.error("爬虫资源加载失败 -> {}", jsonStr);
+                try {
+                    objectNode = mapper.readValue(errorRule, ObjectNode.class);
+                } catch (JsonProcessingException ex) {
+                    log.error("爬虫资源加载失败,设置默认值 -> {}", errorRule);
                 }
+            }
+
+            if (ObjUtil.isNull(objectNode)) {
+                throw new NullPointerException("爬虫资源加载失败");
             }
         }
     }
