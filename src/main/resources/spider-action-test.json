@@ -1,12 +1,12 @@
 {
   "books": [
     {
-      "name": "新笔趣阁",
+      "name": "笔趣阁",
       "spider-type": "search",
       "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
-        "url": "http://localhost/abc/",
+        "url": "https://www.gyzxzm.com/search/?searchkey={params[0]}",
         "headers": {
           "Cookie": "此处填写京东登录Cookie"
         },
@@ -17,18 +17,12 @@
       "resolver-action": {
         "element": {
           "element-type": "class",
-          "element-value": "grid",
+          "element-value": "search-list",
           "content-type": "array",
           "element": {
             "element-type": "tage",
-            "element-value": "tr",
+            "element-value": "li",
             "content-type": "array",
-            "remove": [
-              {
-                "element-type": "align",
-                "element-value": "center"
-              }
-            ],
             "element": {
               "element-type": "result",
               "element-value": "item",
@@ -36,13 +30,14 @@
               "start-assembly": true,
               "result-element": [
                 {
-                  "element-type": "class",
-                  "element-value": "even",
+                  "element-type": "tage",
+                  "element-value": "a",
                   "content-type": "obj",
-                  "leaf-index": 0,
+                  "leaf-index": 1,
                   "is-leaf": true,
-                  "target-key": "text",
+                  "target-key": "title",
                   "result-key": "bookName",
+                  "result-end": true,
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
                     "prefix": "",
@@ -50,30 +45,25 @@
                   }
                 },
                 {
-                  "element-type": "class",
-                  "element-value": "even",
+                  "element-type": "tage",
+                  "element-value": "a",
                   "content-type": "obj",
-                  "element": {
-                    "element-type": "tage",
-                    "element-value": "a",
-                    "content-type": "obj",
-                    "leaf-index": 0,
-                    "is-leaf": true,
-                    "target-key": "href",
-                    "result-key": "bookLink",
-                    "result-end": true,
-                    "interceptors": {
-                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
-                      "prefix": "",
-                      "suffix": ""
-                    }
+                  "leaf-index": 1,
+                  "is-leaf": true,
+                  "target-key": "href",
+                  "result-key": "bookLink",
+                  "result-end": true,
+                  "interceptors": {
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "prefix": "https://www.gyzxzm.com",
+                    "suffix": ""
                   }
                 },
                 {
                   "element-type": "class",
-                  "element-value": "even",
+                  "element-value": "s4",
                   "content-type": "obj",
-                  "leaf-index": 1,
+                  "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
                   "result-key": "author",
@@ -85,7 +75,7 @@
                 },
                 {
                   "element-type": "class",
-                  "element-value": "odd",
+                  "element-value": "s3",
                   "content-type": "obj",
                   "leaf-index": 0,
                   "is-leaf": true,
@@ -99,9 +89,9 @@
                 },
                 {
                   "element-type": "class",
-                  "element-value": "odd",
+                  "element-value": "s6",
                   "content-type": "obj",
-                  "leaf-index": 1,
+                  "leaf-index": 0,
                   "is-leaf": true,
                   "target-key": "text",
                   "result-key": "updateDate",
@@ -117,16 +107,16 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.BookData"
+        "java-type": "com.liao.book.entity.BookData"
       }
     },
     {
-      "name": "新笔趣阁",
+      "name": "笔趣阁",
       "spider-type": "chapter",
       "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
-        "url": "http://localhost/efg/index.html",
+        "url": "{params[0]}",
         "headers": {
           "Cookie": "此处填写京东登录Cookie"
         },
@@ -136,12 +126,12 @@
       },
       "resolver-action": {
         "element": {
-          "element-type": "class",
-          "element-value": "pc_list",
-          "content-type": "array",
+          "element-type": "id",
+          "element-value": "list",
+          "content-type": "obj",
           "element": {
             "element-type": "tage",
-            "element-value": "li",
+            "element-value": "dd",
             "content-type": "array",
             "element": {
               "element-type": "result",
@@ -174,7 +164,7 @@
                   "result-end": true,
                   "interceptors": {
                     "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
-                    "prefix": "",
+                    "prefix": "https://www.gyzxzm.com",
                     "suffix": ""
                   }
                 }
@@ -188,12 +178,12 @@
       }
     },
     {
-      "name": "新笔趣阁",
+      "name": "笔趣阁",
       "spider-type": "content",
       "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "site": {
         "method": "GET",
-        "url": "http://localhost/hig/index.html",
+        "url": "{params[0]}",
         "headers": {
           "Cookie": "此处填写京东登录Cookie"
         },
@@ -204,7 +194,7 @@
       "resolver-action": {
         "element": {
           "element-type": "id",
-          "element-value": "content1",
+          "element-value": "article",
           "content-type": "obj",
           "element": {
             "element-type": "result",
