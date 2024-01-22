@@ -37,12 +37,15 @@ public class Main {
 
         // ResolverFactory<ResultEntity> jd = new ResolverFactory<>(abc, "新笔趣阁", "search", "剑来");
 
-        ResolverFactory<BookData> rf1 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"), "笔趣阁", "search", "剑来");
-        ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"), "笔趣阁", "chapter", "https://www.gyzxzm.com/1341/");
-        ResolverFactory<String> rf3 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"), "笔趣阁", "content", "https://www.gyzxzm.com/1341/967891.html");
+        ResolverFactory<BookData> rf1 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"),
+                "书本网", "search", "剑来");
+        ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"),
+                "书本网", "chapter", "http://www.booktxt.tw/list-13073/");
+        ResolverFactory<String> rf3 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-test.json"),
+                "书本网", "content", "http://www.booktxt.tw/list-13073/4331647.html");
 
-        /*List<BookData> re1 = rf1.capture();*/
-        /*List<Chapter> re2 = rf2.capture();*/
+       /* List<BookData> re1 = rf1.capture();*/
+       /* List<Chapter> re2 = rf2.capture();*/
         List<String> re3 = rf3.capture();
 
         System.out.println();
