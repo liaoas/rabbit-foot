@@ -107,7 +107,7 @@
         }
       },
       "config": {
-        "java-type": "com.liao.book.entity.BookData"
+        "java-type": "com.cobalt.entity.BookData"
       }
     },
     {
@@ -174,7 +174,7 @@
         }
       },
       "config": {
-        "java-type": "com.liao.book.entity.Chapter"
+        "java-type": "com.cobalt.entity.Chapter"
       }
     },
     {
@@ -333,7 +333,7 @@
         }
       },
       "config": {
-        "java-type": "com.liao.book.entity.BookData"
+        "java-type": "com.cobalt.entity.BookData"
       }
     },
     {
@@ -400,7 +400,7 @@
         }
       },
       "config": {
-        "java-type": "com.liao.book.entity.Chapter"
+        "java-type": "com.cobalt.entity.Chapter"
       }
     },
     {
