@@ -16,7 +16,6 @@ import java.util.Map;
  * @author LiAo
  * @since 2023-08-07
  */
-@SuppressWarnings("unchecked")
 public class HttpAsk<T> {
 
     private static final String GET = "GET";

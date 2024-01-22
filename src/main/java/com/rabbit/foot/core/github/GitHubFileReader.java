@@ -3,6 +3,8 @@ package com.rabbit.foot.core.github;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.util.Base64;
  * @since 2023-11-30
  */
 public class GitHubFileReader {
+
+    private static final Logger logger = LoggerFactory.getLogger(GitHubFileReader.class);
 
     public static final String GITHUB_API_URL = "https://api.github.com/repos/%s/%s/contents/%s";
 
@@ -73,7 +77,7 @@ public class GitHubFileReader {
                 // 解析 JSON 获取文件内容
                 return parseFileContent(response.toString());
             } else {
-                System.out.println("Failed to retrieve file. Response code: " + responseCode);
+                logger.error("检索GitHub文件失败。响应代码: {}", responseCode);
             }
         } catch (IOException ignored) {
         }
