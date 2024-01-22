@@ -333,7 +333,7 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.BookData"
+        "java-type": "com.liao.book.entity.BookData"
       }
     },
     {
@@ -400,7 +400,7 @@
         }
       },
       "config": {
-        "java-type": "com.rabbit.foot.entity.Chapter"
+        "java-type": "com.liao.book.entity.Chapter"
       }
     },
     {
