@@ -3,8 +3,6 @@ package com.rabbit.foot.core.github;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -24,7 +23,8 @@ import java.util.Base64;
  */
 public class GitHubFileReader {
 
-    private static final Logger logger = LoggerFactory.getLogger(GitHubFileReader.class);
+    private static final Logger logger = Logger.getLogger(GitHubFileReader.class.getName());
+
 
     public static final String GITHUB_API_URL = "https://api.github.com/repos/%s/%s/contents/%s";
 
@@ -77,7 +77,7 @@ public class GitHubFileReader {
                 // 解析 JSON 获取文件内容
                 return parseFileContent(response.toString());
             } else {
-                logger.error("检索GitHub文件失败。响应代码: {}", responseCode);
+                logger.warning("检索GitHub文件失败。响应代码: " + responseCode);
             }
         } catch (IOException ignored) {
         }

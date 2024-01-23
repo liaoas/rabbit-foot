@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.rabbit.foot.core.github.GitHubFileReader;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class Resources {
 
-    private final static Logger log = LoggerFactory.getLogger(Resources.class);
+    private static final Logger logger = Logger.getLogger(GitHubFileReader.class.getName());
 
     private static ObjectNode objectNode = null;
 
@@ -62,13 +62,13 @@ public class Resources {
                     try {
                         resource = ActionResources.class.getClassLoader().getResource("spider-action-test.json");
                     } catch (Exception e) {
-                        log.error("爬虫资源 spider-action-test.json 获取失败");
+                        logger.warning("爬虫资源 spider-action-test.json 获取失败");
                     }
 
                     try {
                         objectNode = mapper.readValue(resource, ObjectNode.class);
                     } catch (IOException e) {
-                        log.error("爬虫资源 spider-action-test.json 读取失败");
+                        logger.warning("爬虫资源 spider-action-test.json 读取失败");
                     }
 
                     if (ObjUtil.isNull(objectNode)) {
@@ -92,11 +92,11 @@ public class Resources {
             try {
                 objectNode = mapper.readValue(url, ObjectNode.class);
             } catch (IOException e) {
-                log.error("爬虫资源读取失败 -> {}", url.getUserInfo());
+                logger.warning("爬虫资源读取失败 -> :" + url.getUserInfo());
                 try {
                     objectNode = mapper.readValue(errorRule, ObjectNode.class);
                 } catch (JsonProcessingException ex) {
-                    log.error("爬虫资源加载失败,设置默认值 -> {}", errorRule);
+                    logger.warning("爬虫资源加载失败,设置默认值 -> :" + errorRule);
                 }
             }
 
@@ -117,11 +117,11 @@ public class Resources {
             try {
                 objectNode = mapper.readValue(jsonStr, ObjectNode.class);
             } catch (IOException e) {
-                log.error("爬虫资源加载失败 -> {}", jsonStr);
+                logger.warning("爬虫资源加载失败 -> :" + jsonStr);
                 try {
                     objectNode = mapper.readValue(errorRule, ObjectNode.class);
                 } catch (JsonProcessingException ex) {
-                    log.error("爬虫资源加载失败,设置默认值 -> {}", errorRule);
+                    logger.warning("爬虫资源加载失败,设置默认值 -> :" + errorRule);
                 }
             }
 
