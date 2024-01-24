@@ -75,8 +75,8 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
             if (Clazz.getName().equals(String.class.getName())) {
                 List<String> value = IntStream.range(0, arrayNode.size()).mapToObj(index -> arrayNode.get(index).get("value").asText()).collect(Collectors.toList());
-
-                return (List<T>) value;
+                @SuppressWarnings("unchecked") List<T> newList = (List<T>) value;
+                return newList;
             }
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -123,129 +123,102 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
         ArrayNode arrayNode = resultMap.createArrayNode();
 
-        resolver(arrayNode, node, null, this.webDocument, "obj");
+        SpiderTemp temp = new SpiderTemp(arrayNode, node, null, this.webDocument, "obj");
+
+        resolver(temp);
 
         return arrayNode;
     }
 
     /**
-     * 递归解析HTML节点
+     * 递归解析HTML节点至结果节点->packageAssembly()
      *
-     * @param content  用于存储爬虫的结果内容
-     * @param action   动作描述
-     * @param arr      爬虫进度指针 多节点
-     * @param obj      爬虫进度指针 单节点
-     * @param lastType 上次节点类型
+     * @param temp 存储爬虫解析参数
      */
-    private void resolver(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
-        if (ObjUtil.isNull(action)) {
+    private void resolver(SpiderTemp temp) {
+        if (ObjUtil.isNull(temp.action)) {
             return;
         }
 
-        String elementType = action.get("element-type").asText();
-
-        String elementValue = action.get("element-value").asText();
-
-        if ("obj".equals(lastType)) {
-            switch (elementType) {
-                case "id":
-                    obj = obj.getElementById(elementValue);
-                    lastType = "obj";
-                    break;
-                case "class":
-                    arr = obj.getElementsByClass(elementValue);
-                    lastType = "arr";
-                    nodeFiltering(action, arr);
-                    break;
-                case "tage":
-                    arr = obj.getElementsByTag(elementValue);
-                    lastType = "arr";
-                    nodeFiltering(action, arr);
-                    break;
-                case "result":
-                    // 判断结果伪动作，标记开始组装结果
-                    if (!action.has("result-element")) {
-                        break;
-                    }
-
-                    ArrayNode arrayNode = action.withArray("result-element");
-
-                    ObjectNode objectNode = new ObjectMapper().createObjectNode();
-
-                    for (JsonNode jsonNode : arrayNode) {
-                        packageAssembly(objectNode, jsonNode, null, obj, "obj");
-                    }
-
-                    content.add(objectNode);
-                    break;
-            }
+        if ("obj".equals(temp.lastType)) {
+            getElement(temp);
         } else {
-            for (Element element : arr) {
-                switch (elementType) {
-                    case "id":
-                        if (action.has("leaf-index")) {
-                            obj = element.getElementById(elementValue);
-                            lastType = "obj";
-                        } else {
-                            obj = element.getElementById(elementValue);
-                            lastType = "arr";
-
-                        }
-                        break;
-                    case "class":
-                        if (action.has("leaf-index")) {
-                            int anInt = action.get("leaf-index").asInt();
-                            obj = element.getElementsByClass(elementValue).get(anInt);
-                            lastType = "obj";
-                        } else {
-                            arr = element.getElementsByClass(elementValue);
-                            lastType = "arr";
-                            nodeFiltering(action, arr);
-                        }
-                        break;
-
-                    case "tage":
-                        if (action.has("leaf-index")) {
-                            int anInt = action.get("leaf-index").asInt();
-                            obj = element.getElementsByTag(elementValue).get(anInt);
-                            lastType = "obj";
-                        } else {
-                            arr = element.getElementsByTag(elementValue);
-                            lastType = "arr";
-                            nodeFiltering(action, arr);
-                        }
-
-                        break;
-                    case "result":
-                        // 判断结果伪动作，标记开始组装结果
-                        if (!action.has("result-element")) {
-                            break;
-                        }
-
-                        ArrayNode arrayNode = action.withArray("result-element");
-
-                        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-
-                        for (JsonNode jsonNode : arrayNode) {
-                            packageAssembly(objectNode, jsonNode, null, element, "obj");
-                        }
-
-                        content.add(objectNode);
-                        break;
-                }
-
+            for (Element element : temp.arr) {
+                temp.obj = element;
+                getElement(temp);
             }
         }
 
-        if (!action.has("element")) {
+        if (!temp.action.has("element")) {
             return;
         }
 
         // 下一次动作
-        action = action.path("element");
+        temp.action = temp.action.path("element");
 
         // 递归下一次
-        resolver(content, action, arr, obj, lastType);
+        resolver(temp);
+    }
+
+
+    /**
+     * 根绝爬虫描述，获取节点
+     *
+     * @param temp 存储爬虫解析参数
+     */
+    private void getElement(SpiderTemp temp) {
+
+        String elementType = temp.action.get("element-type").asText();
+
+        String elementValue = temp.action.get("element-value").asText();
+
+        switch (elementType) {
+            case "id":
+                temp.obj = temp.obj.getElementById(elementValue);
+                temp.lastType = "obj";
+                break;
+            case "class":
+                if (temp.action.has("leaf-index")) {
+                    int anInt = temp.action.get("leaf-index").asInt();
+                    temp.obj = temp.obj.getElementsByClass(elementValue).get(anInt);
+                    temp.lastType = "obj";
+                } else {
+                    temp.arr = temp.obj.getElementsByClass(elementValue);
+                    temp.lastType = "arr";
+                    nodeFiltering(temp.action, temp.arr);
+                }
+                break;
+
+            case "tage":
+                if (temp.action.has("leaf-index")) {
+                    int anInt = temp.action.get("leaf-index").asInt();
+                    temp.obj = temp.obj.getElementsByTag(elementValue).get(anInt);
+                    temp.lastType = "obj";
+                } else {
+                    temp.arr = temp.obj.getElementsByTag(elementValue);
+                    temp.lastType = "arr";
+                    nodeFiltering(temp.action, temp.arr);
+                }
+
+                break;
+            case "result":
+                // 判断结果伪动作，标记开始组装结果
+                if (!temp.action.has("result-element")) {
+                    break;
+                }
+
+                ArrayNode arrayNode = temp.action.withArray("result-element");
+
+                ObjectNode objectNode = new ObjectMapper().createObjectNode();
+
+                for (JsonNode jsonNode : arrayNode) {
+                    packageAssembly(objectNode, jsonNode, null, temp.obj, "obj");
+                }
+
+                temp.content.add(objectNode);
+                break;
+        }
+
     }
 
     /**
@@ -265,10 +238,10 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         String elementValue = action.get("element-value").asText();
 
         if ("obj".equals(lastType)) {
-            structuralAnalysisMap(contentTemp, action, elementType, elementValue, obj, arr, obj, lastType);
+            structuralAnalysisMap(contentTemp, action, elementType, elementValue, obj);
         } else {
             for (Element element : arr) {
-                structuralAnalysisMap(contentTemp, action, elementType, elementValue, element, arr, obj, lastType);
+                structuralAnalysisMap(contentTemp, action, elementType, elementValue, element);
             }
         }
 
@@ -283,45 +256,36 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
 
     /**
-     * 结果解析并映射
+     * 结果解析并填充 JsonObject 对象属性：属性值
      *
      * @param contentTemp  存储结果
      * @param action       爬虫动作
      * @param elementType  节点类型
      * @param elementValue 节点值
      * @param element      待解析的节点
-     * @param arr          存储本次解析返回的集合节点对象，用作下一次递归
-     * @param obj          存储本次解析返回的节点对象，用作下一次递归
-     * @param lastType     下一次解析类型
      */
-    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue, Element element, Elements arr, Element obj, String lastType) {
+    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue,
+                                       Element element) {
+        Elements arr;
         switch (elementType) {
             case "id":
-                if (action.has("leaf-index")) {
-                    obj = element.getElementById(elementValue);
+                element = element.getElementById(elementValue);
+                results2Json(contentTemp, action, element);
 
-                    results2Json(contentTemp, action, obj, lastType);
-
-                } else {
-                    obj = element.getElementById(elementValue);
-                    lastType = "obj";
-                }
                 break;
-
             case "class":
                 if (action.has("leaf-index")) {
                     int anInt = action.get("leaf-index").asInt();
                     try {
-                        obj = element.getElementsByClass(elementValue).get(anInt);
+                        element = element.getElementsByClass(elementValue).get(anInt);
                     } catch (Exception e) {
                         return;
                     }
 
-                    results2Json(contentTemp, action, obj, lastType);
+                    results2Json(contentTemp, action, element);
 
                 } else {
                     arr = element.getElementsByClass(elementValue);
-                    lastType = "arr";
                     nodeFiltering(action, arr);
                 }
                 break;
@@ -331,27 +295,20 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     int anInt = action.get("leaf-index").asInt();
 
                     try {
-                        obj = element.getElementsByTag(elementValue).get(anInt);
+                        element = element.getElementsByTag(elementValue).get(anInt);
                     } catch (Exception e) {
                         return;
                     }
 
-                    results2Json(contentTemp, action, obj, lastType);
+                    results2Json(contentTemp, action, element);
 
                 } else {
                     arr = element.getElementsByTag(elementValue);
-                    lastType = "arr";
                     nodeFiltering(action, arr);
                 }
                 break;
             case "content":
-                try {
-                    obj = element;
-                } catch (Exception e) {
-                    return;
-                }
-
-                results2Json(contentTemp, action, obj, lastType);
+                results2Json(contentTemp, action, element);
                 break;
         }
     }
@@ -362,9 +319,8 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * @param contentTemp 结果对象
      * @param action      爬虫动作描述
      * @param obj         要解析的结果
-     * @param lastType    下一次解析类型
      */
-    private void results2Json(ObjectNode contentTemp, JsonNode action, Element obj, String lastType) {
+    private void results2Json(ObjectNode contentTemp, JsonNode action, Element obj) {
         if (action.has("is-leaf")) {
 
             if (!action.has("target-key")) {
@@ -381,7 +337,28 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                 contentTemp.put(action.get("result-key").asText(), interceptors(attribute, action));
             }
         }
-        lastType = "obj";
+    }
+
+    static class SpiderTemp {
+
+        // 用于存储爬虫的结果内容
+        ArrayNode content;
+        // 爬虫动作
+        JsonNode action;
+        // 存储多个节点
+        Elements arr;
+        // 存储单个节点 | 要解析的节点
+        Element obj;
+        // 上一次节点类型；
+        String lastType;
+
+        public SpiderTemp(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
+            this.content = content;
+            this.action = action;
+            this.arr = arr;
+            this.obj = obj;
+            this.lastType = lastType;
+        }
     }
 
 }
