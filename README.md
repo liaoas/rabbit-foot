@@ -217,3 +217,9 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
 }
 ```
 
+## 支持
+
+感谢 JetBrains 赠送的开发工具许可证
+
+![IntelliJ_IDEA_icon.svg](src%2Fmain%2Fresources%2Fimg%2FIntelliJ_IDEA_icon.svg)
+
