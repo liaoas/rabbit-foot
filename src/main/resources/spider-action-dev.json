@@ -1,0 +1,110 @@
+{
+  "books": [
+    {
+      "name": "新笔趣阁",
+      "spider-type": "search",
+      "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
+      "config": {
+        "java-type": "com.rabbit.foot.entity.BookData"
+      },
+      "site": {
+        "method": "GET",
+        "url": "http://localhost/abc/",
+        "headers": {
+          "Cookie": "此处填写京东登录Cookie"
+        },
+        "params": {
+          "searchkey": "{params[0]}"
+        }
+      },
+      "resolver-action": {
+        "element": {
+          "element-type": "class",
+          "element-value": "grid",
+          "content-type": "array",
+          "element": {
+            "element-type": "tage",
+            "element-value": "tr",
+            "content-type": "array",
+            "element": {
+              "element-type": "result",
+              "element-value": "item",
+              "content-type": "array",
+              "start-assembly": true,
+              "remove": [
+                {
+                  "element-type": "class",
+                  "element-value": "grid"
+                }
+              ],
+              "result-element": [
+                {
+                  "element-type": "class",
+                  "element-value": "even",
+                  "content-type": "obj",
+                  "leaf-index": 0,
+                  "is-leaf": true,
+                  "target-key": "text",
+                  "result-key": "bookName",
+                  "interceptors": {
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "prefix": "",
+                    "suffix": ""
+                  }
+                },
+                {
+                  "element-type": "class",
+                  "element-value": "even",
+                  "content-type": "obj",
+                  "element": {
+                    "element-type": "tage",
+                    "element-value": "a",
+                    "content-type": "obj",
+                    "leaf-index": 0,
+                    "is-leaf": true,
+                    "target-key": "href",
+                    "result-key": "bookLink",
+                    "result-end": true,
+                    "interceptors": {
+                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "prefix": "",
+                      "suffix": ""
+                    }
+                  }
+                },
+                {
+                  "element-type": "class",
+                  "element-value": "even",
+                  "content-type": "obj",
+                  "leaf-index": 1,
+                  "is-leaf": true,
+                  "target-key": "text",
+                  "result-key": "author",
+                  "interceptors": {
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "prefix": "",
+                    "suffix": ""
+                  }
+                },
+                {
+                  "element-type": "class",
+                  "element-value": "odd",
+                  "content-type": "obj",
+                  "leaf-index": 0,
+                  "is-leaf": true,
+                  "target-key": "text",
+                  "result-key": "chapter",
+                  "interceptors": {
+                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "prefix": "",
+                    "suffix": ""
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
