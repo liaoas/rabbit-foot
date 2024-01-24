@@ -217,6 +217,16 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
                 temp.content.add(objectNode);
                 break;
+            default:
+                if (temp.action.has("leaf-index")) {
+                    int anInt = temp.action.get("leaf-index").asInt();
+                    temp.obj = temp.obj.getElementsByAttribute(elementValue).get(anInt);
+                    temp.lastType = "obj";
+                } else {
+                    temp.arr = temp.obj.getElementsByAttribute(elementValue);
+                    temp.lastType = "arr";
+                    nodeFiltering(temp.action, temp.arr);
+                }
         }
 
     }
@@ -264,8 +274,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * @param elementValue 节点值
      * @param element      待解析的节点
      */
-    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue,
-                                       Element element) {
+    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue, Element element) {
         Elements arr;
         switch (elementType) {
             case "id":
