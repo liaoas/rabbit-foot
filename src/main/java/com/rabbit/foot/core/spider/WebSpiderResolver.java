@@ -156,6 +156,8 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         // 下一次动作
         temp.action = temp.action.path("element");
 
+        temp.next();
+
         // 递归下一次
         resolver(temp);
     }
@@ -186,6 +188,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     temp.arr = temp.obj.getElementsByClass(elementValue);
                     temp.lastType = "arr";
                     nodeFiltering(temp.action, temp.arr);
+                    temp.addChildNodes(temp.arr);
                 }
                 break;
 
@@ -198,6 +201,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     temp.arr = temp.obj.getElementsByTag(elementValue);
                     temp.lastType = "arr";
                     nodeFiltering(temp.action, temp.arr);
+                    temp.addChildNodes(temp.arr);
                 }
 
                 break;
@@ -229,6 +233,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     temp.arr = temp.obj.getElementsByAttribute(elementValue);
                     temp.lastType = "arr";
                     nodeFiltering(temp.action, temp.arr);
+                    temp.addChildNodes(temp.arr);
                 }
         }
 
@@ -256,6 +261,8 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         }
 
         aResult.action = aResult.action.path("element");
+
+        aResult.next();
 
         packageAssembly(aResult);
     }
@@ -294,6 +301,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     aResult.arr = aResult.obj.getElementsByClass(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
                     aResult.lastType = "array";
+                    aResult.addChildNodes(aResult.arr);
                 }
                 break;
 
@@ -315,6 +323,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     aResult.arr = aResult.obj.getElementsByTag(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
                     aResult.lastType = "array";
+                    aResult.addChildNodes(aResult.arr);
                 }
                 break;
             case "content":
@@ -356,6 +365,8 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         Element obj;
         // 上一次节点类型；
         String lastType;
+        // 存储Array类型的子节点集合
+        Elements childNode = new Elements();
 
         public SpiderTemp(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
             this.content = content;
@@ -372,6 +383,28 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             this.obj = obj;
             this.lastType = lastType;
         }
+
+        /**
+         * 克隆节点，作为下一次递归指针
+         */
+        public void next() {
+            if (this.childNode.isEmpty()) {
+                return;
+            }
+
+            this.arr = this.childNode.clone();
+            this.clearChildNode();
+            this.lastType = "array";
+        }
+
+        public void addChildNodes(Elements elements) {
+            this.childNode.addAll(elements);
+        }
+
+        private void clearChildNode() {
+            this.childNode.clear();
+        }
     }
+
 
 }
