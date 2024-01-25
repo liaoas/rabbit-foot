@@ -493,15 +493,20 @@
                 {
                   "element-type": "class",
                   "element-value": "s3",
-                  "content-type": "obj",
-                  "leaf-index": 0,
-                  "is-leaf": true,
-                  "target-key": "text",
-                  "result-key": "chapter",
-                  "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
-                    "prefix": "",
-                    "suffix": ""
+                  "content-type": "array",
+                  "element": {
+                    "element-type": "tage",
+                    "element-value": "a",
+                    "content-type": "obj",
+                    "leaf-index": 0,
+                    "is-leaf": true,
+                    "target-key": "title",
+                    "result-key": "chapter",
+                    "interceptors": {
+                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "prefix": "",
+                      "suffix": ""
+                    }
                   }
                 },
                 {

@@ -266,13 +266,17 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      */
     private void structuralAnalysisMap(SpiderTemp aResult) {
 
+        if (!aResult.action.has("element-type") || !aResult.action.has("element-value")) {
+            return;
+        }
+
         String elementType = aResult.action.get("element-type").asText();
         String elementValue = aResult.action.get("element-value").asText();
 
         switch (elementType) {
             case "id":
                 aResult.obj = aResult.obj.getElementById(elementValue);
-                results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                results2Json(aResult);
                 aResult.lastType = "obj";
                 break;
             case "class":
@@ -283,13 +287,13 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                     } catch (Exception e) {
                         return;
                     }
-                    results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                    results2Json(aResult);
                     aResult.lastType = "obj";
 
                 } else {
                     aResult.arr = aResult.obj.getElementsByClass(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = "arr";
+                    aResult.lastType = "array";
                 }
                 break;
 
@@ -303,46 +307,38 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                         return;
                     }
 
-                    results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                    results2Json(aResult);
 
                     aResult.lastType = "obj";
 
                 } else {
                     aResult.arr = aResult.obj.getElementsByTag(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = "arr";
+                    aResult.lastType = "array";
                 }
                 break;
             case "content":
-                results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                results2Json(aResult);
                 break;
         }
     }
 
     /**
      * 将结果组装为Json对象
-     *
-     * @param contentTemp 结果对象
-     * @param action      爬虫动作描述
-     * @param obj         要解析的结果
      */
-    private void results2Json(ObjectNode contentTemp, JsonNode action, Element obj) {
-        if (!action.has("is-leaf")) {
+    private void results2Json(SpiderTemp aResult) {
+        if (!aResult.action.has("is-leaf") || !aResult.action.has("target-key")) {
             return;
         }
 
-        if (!action.has("target-key")) {
-            return;
-        }
-
-        String target = action.get("target-key").asText();
+        String target = aResult.action.get("target-key").asText();
 
         if (target.equals("text")) {
-            String text = obj.text();
-            contentTemp.put(action.get("result-key").asText(), interceptors(text, action));
+            String text = aResult.obj.text();
+            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(text, aResult.action));
         } else {
-            String attribute = obj.attr(target);
-            contentTemp.put(action.get("result-key").asText(), interceptors(attribute, action));
+            String attribute = aResult.obj.attr(target);
+            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(attribute, aResult.action));
         }
     }
 
