@@ -206,13 +206,16 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
                 if (!temp.action.has("result-element")) {
                     break;
                 }
-
+                // 获取结果动作集合
                 ArrayNode arrayNode = temp.action.withArray("result-element");
 
+                // 存储单个结果对象
                 ObjectNode objectNode = new ObjectMapper().createObjectNode();
 
+                // 遍历结果集合，组装到一个结果对象里
                 for (JsonNode jsonNode : arrayNode) {
-                    packageAssembly(objectNode, jsonNode, null, temp.obj, "obj");
+                    SpiderTemp AResult = new SpiderTemp(objectNode, jsonNode, null, temp.obj, "obj");
+                    packageAssembly(AResult);
                 }
 
                 temp.content.add(objectNode);
@@ -233,91 +236,85 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
     /**
      * 递归解析结果节点描述部分并组装成结果对象
-     *
-     * @param contentTemp 单个结果对象
-     * @param action      动作
-     * @param arr         存储本次解析集合节点对象，用作下一次递归
-     * @param obj         存储本次解析节点对象，用作下一次递归
-     * @param lastType    标记一下次解析结果类型
      */
-    private void packageAssembly(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
-        if (ObjUtil.isNull(action)) {
+    private void packageAssembly(SpiderTemp aResult) {
+        if (ObjUtil.isNull(aResult.action)) {
             return;
         }
-        String elementType = action.get("element-type").asText();
-        String elementValue = action.get("element-value").asText();
 
-        if ("obj".equals(lastType)) {
-            structuralAnalysisMap(contentTemp, action, elementType, elementValue, obj);
+        if ("obj".equals(aResult.lastType)) {
+            structuralAnalysisMap(aResult);
         } else {
-            for (Element element : arr) {
-                structuralAnalysisMap(contentTemp, action, elementType, elementValue, element);
+            for (Element element : aResult.arr) {
+                aResult.obj = element;
+                structuralAnalysisMap(aResult);
             }
         }
 
-        if (!action.has("element")) {
+        if (!aResult.action.has("element")) {
             return;
         }
 
-        action = action.path("element");
+        aResult.action = aResult.action.path("element");
 
-        packageAssembly(contentTemp, action, arr, obj, lastType);
+        packageAssembly(aResult);
     }
 
 
     /**
      * 结果解析并填充 JsonObject 对象属性：属性值
-     *
-     * @param contentTemp  存储结果
-     * @param action       爬虫动作
-     * @param elementType  节点类型
-     * @param elementValue 节点值
-     * @param element      待解析的节点
      */
-    private void structuralAnalysisMap(ObjectNode contentTemp, JsonNode action, String elementType, String elementValue, Element element) {
-        Elements arr;
+    private void structuralAnalysisMap(SpiderTemp aResult) {
+
+        String elementType = aResult.action.get("element-type").asText();
+        String elementValue = aResult.action.get("element-value").asText();
+
         switch (elementType) {
             case "id":
-                element = element.getElementById(elementValue);
-                results2Json(contentTemp, action, element);
-
+                aResult.obj = aResult.obj.getElementById(elementValue);
+                results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                aResult.lastType = "obj";
                 break;
             case "class":
-                if (action.has("leaf-index")) {
-                    int anInt = action.get("leaf-index").asInt();
+                if (aResult.action.has("leaf-index")) {
+                    int anInt = aResult.action.get("leaf-index").asInt();
                     try {
-                        element = element.getElementsByClass(elementValue).get(anInt);
+                        aResult.obj = aResult.obj.getElementsByClass(elementValue).get(anInt);
                     } catch (Exception e) {
                         return;
                     }
-
-                    results2Json(contentTemp, action, element);
+                    results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+                    aResult.lastType = "obj";
 
                 } else {
-                    arr = element.getElementsByClass(elementValue);
-                    nodeFiltering(action, arr);
+                    aResult.arr = aResult.obj.getElementsByClass(elementValue);
+                    nodeFiltering(aResult.action, aResult.arr);
+                    aResult.lastType = "arr";
                 }
                 break;
 
             case "tage":
-                if (action.has("leaf-index")) {
-                    int anInt = action.get("leaf-index").asInt();
+                if (aResult.action.has("leaf-index")) {
+                    int anInt = aResult.action.get("leaf-index").asInt();
 
                     try {
-                        element = element.getElementsByTag(elementValue).get(anInt);
+                        aResult.obj = aResult.obj.getElementsByTag(elementValue).get(anInt);
                     } catch (Exception e) {
                         return;
                     }
 
-                    results2Json(contentTemp, action, element);
+                    results2Json(aResult.contentTemp, aResult.action, aResult.obj);
+
+                    aResult.lastType = "obj";
 
                 } else {
-                    arr = element.getElementsByTag(elementValue);
-                    nodeFiltering(action, arr);
+                    aResult.arr = aResult.obj.getElementsByTag(elementValue);
+                    nodeFiltering(aResult.action, aResult.arr);
+                    aResult.lastType = "arr";
                 }
                 break;
             case "content":
-                results2Json(contentTemp, action, element);
+                results2Json(aResult.contentTemp, aResult.action, aResult.obj);
                 break;
         }
     }
@@ -330,28 +327,31 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * @param obj         要解析的结果
      */
     private void results2Json(ObjectNode contentTemp, JsonNode action, Element obj) {
-        if (action.has("is-leaf")) {
+        if (!action.has("is-leaf")) {
+            return;
+        }
 
-            if (!action.has("target-key")) {
-                return;
-            }
+        if (!action.has("target-key")) {
+            return;
+        }
 
-            String target = action.get("target-key").asText();
+        String target = action.get("target-key").asText();
 
-            if (target.equals("text")) {
-                String text = obj.text();
-                contentTemp.put(action.get("result-key").asText(), interceptors(text, action));
-            } else {
-                String attribute = obj.attr(target);
-                contentTemp.put(action.get("result-key").asText(), interceptors(attribute, action));
-            }
+        if (target.equals("text")) {
+            String text = obj.text();
+            contentTemp.put(action.get("result-key").asText(), interceptors(text, action));
+        } else {
+            String attribute = obj.attr(target);
+            contentTemp.put(action.get("result-key").asText(), interceptors(attribute, action));
         }
     }
 
     static class SpiderTemp {
 
-        // 用于存储爬虫的结果内容
+        // 用于存储爬虫结果内容集合
         ArrayNode content;
+        // 存储单条爬虫结果
+        ObjectNode contentTemp;
         // 爬虫动作
         JsonNode action;
         // 存储多个节点
@@ -363,6 +363,14 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
         public SpiderTemp(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
             this.content = content;
+            this.action = action;
+            this.arr = arr;
+            this.obj = obj;
+            this.lastType = lastType;
+        }
+
+        public SpiderTemp(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
+            this.contentTemp = contentTemp;
             this.action = action;
             this.arr = arr;
             this.obj = obj;
