@@ -345,6 +345,9 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
         if (target.equals("text")) {
             String text = aResult.obj.text();
             aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(text, aResult.action));
+        } else if (target.equals("html")) {
+            String html = aResult.obj.html();
+            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(html, aResult.action));
         } else {
             String attribute = aResult.obj.attr(target);
             aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(attribute, aResult.action));
@@ -353,7 +356,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
     static class SpiderTemp {
 
-        // 用于存储爬虫结果内容集合
+        // 存储爬虫结果内容集合
         ArrayNode content;
         // 存储单条爬虫结果
         ObjectNode contentTemp;

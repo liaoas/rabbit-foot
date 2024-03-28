@@ -40,14 +40,18 @@ public class Main {
         /*ResolverFactory<BookData> rf1 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
                 "书本网", "search", "剑来");
         ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
-                "书本网", "chapter", "http://www.booktxt.tw/list-13073/");
+                "书本网", "chapter", "http://www.booktxt.tw/list-13073/");*/
         ResolverFactory<String> rf3 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
-                "书本网", "content", "http://www.booktxt.tw/list-13073/4331649.html");*/
+                "选书网", "content", "http://localhost/hig/");
         ResolverFactory<BookData> rf1 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
                 "笔趣阁dev", "search", "剑来");
-        List<BookData> re1 = rf1.capture();
-        /*List<Chapter> re2 = rf2.capture();
-        List<String> re3 = rf3.capture();*/
+
+        ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
+                "选书网", "chapter", "http://localhost/efg/");
+
+        /*List<BookData> re1 = rf1.capture();*/
+        List<Chapter> re2 = rf2.capture();
+        /*List<String> re3 = rf3.capture();*/
 
         System.out.println();
     }

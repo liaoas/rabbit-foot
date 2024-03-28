@@ -21,7 +21,6 @@ import java.util.Map;
  * @author LiAo
  * @since 2023-09-20
  */
-@SuppressWarnings("unchecked")
 public abstract class SpiderResolver extends ActionResources {
 
     /**
