@@ -1,5 +1,6 @@
 package com.rabbit.foot;
 
+import com.rabbit.foot.common.enums.ReptileType;
 import com.rabbit.foot.core.factory.ResolverFactory;
 import com.rabbit.foot.core.github.GitHubFileReader;
 import com.rabbit.foot.entity.BookData;
@@ -8,24 +9,7 @@ import com.rabbit.foot.entity.Chapter;
 import java.util.List;
 
 /**
- * {
- * "site": {
- * "method": "POST",
- * "url": "http:localhost:80/job/post-test",
- * "headers": {
- * "Cookie": "application/json",
- * "Authorization": "Bearer your_access_token_here"
- * },
- * "body": {
- * "keyword": "三体"
- * },
- * "params": {
- * "q": "{params[0]}"
- * }
- * }
- * <p>
- * JsonSpiderBuild
- * </p>
+ * Test
  *
  * @author LiAo
  * @since 2023/8/2
@@ -42,12 +26,12 @@ public class Main {
         ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
                 "书本网", "chapter", "http://www.booktxt.tw/list-13073/");*/
         ResolverFactory<String> rf3 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
-                "选书网", "content", "http://localhost/hig/");
+                "选书网", ReptileType.CONTENT, "http://localhost/hig/");
         ResolverFactory<BookData> rf1 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
-                "笔趣阁dev", "search", "剑来");
+                "笔趣阁dev", ReptileType.SEARCH, "剑来");
 
         ResolverFactory<Chapter> rf2 = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
-                "选书网", "chapter", "http://localhost/efg/");
+                "选书网", ReptileType.CHAPTER, "http://localhost/efg/");
 
         /*List<BookData> re1 = rf1.capture();*/
         List<Chapter> re2 = rf2.capture();

@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.rabbit.foot.utils.ConvertUtils;
+import com.rabbit.foot.common.utils.ConvertUtils;
 
 import java.util.Map;
 

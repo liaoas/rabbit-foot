@@ -5,7 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.rabbit.foot.utils.ConvertUtils;
+import com.rabbit.foot.common.constant.SpiderActionConstants;
+import com.rabbit.foot.common.enums.ReptileType;
+import com.rabbit.foot.common.utils.ConvertUtils;
 
 import java.net.URL;
 
@@ -25,7 +27,7 @@ public abstract class ActionResources {
 
     public String spiderName;
 
-    public String spiderType;
+    public ReptileType spiderType;
 
     // 当前使用的爬虫动作
     protected JsonNode activeRes;
@@ -70,20 +72,20 @@ public abstract class ActionResources {
      * @param params     爬虫http填充
      */
     private void getSpiderActionConfig(ObjectNode objectNode, String... params) {
-        ArrayNode books = objectNode.withArray("books");
+        ArrayNode books = objectNode.withArray(SpiderActionConstants.BOOKS);
 
         if (books.size() <= 0) {
             throw new IllegalArgumentException("spider-action-test.json 爬虫资源为空");
         }
 
         for (JsonNode book : books) {
-            if (spiderName.equals(book.get("name").asText()) && spiderType.equals(book.get("spider-type").asText())) {
+            if (spiderName.equals(book.get(SpiderActionConstants.NAME).asText()) && spiderType.value.equals(book.get(SpiderActionConstants.SPIDER_TYPE).asText())) {
                 activeRes = book;
             }
         }
 
         if (ObjUtil.isNull(activeRes)) {
-            throw new RuntimeException("spiderName：" + spiderName + ", spiderType: " + spiderType + " 资源获取为空");
+            throw new RuntimeException("spiderName：" + spiderName + ", spiderType: " + spiderType.value + " 资源获取为空");
         }
 
         // 填充请求参数

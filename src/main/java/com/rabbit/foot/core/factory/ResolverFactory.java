@@ -1,8 +1,9 @@
 package com.rabbit.foot.core.factory;
 
+import com.rabbit.foot.common.enums.ReptileType;
 import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.core.spider.Resolver;
-import com.rabbit.foot.utils.BeanUtils;
+import com.rabbit.foot.common.utils.BeanUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -21,14 +22,14 @@ public class ResolverFactory<T> extends ActionResources {
     private ResolverFactory() {
     }
 
-    public ResolverFactory(URL url, String spiderName, String spiderType, String... params) {
+    public ResolverFactory(URL url, String spiderName, ReptileType spiderType, String... params) {
         super.url = url;
         super.spiderName = spiderName;
         super.spiderType = spiderType;
         getSpiderActionConfigByUrl(params);
     }
 
-    public ResolverFactory(String jsonStr, String spiderName, String spiderType, String... params) {
+    public ResolverFactory(String jsonStr, String spiderName, ReptileType spiderType, String... params) {
         super.jsonString = jsonStr;
         super.spiderName = spiderName;
         super.spiderType = spiderType;
