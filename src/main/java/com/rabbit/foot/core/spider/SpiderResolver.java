@@ -9,9 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * <p>
@@ -27,11 +25,6 @@ public abstract class SpiderResolver extends ActionResources {
      * 爬取的Web节点
      */
     protected Document webDocument;
-
-    /**
-     * 拦截器缓存
-     */
-    private static final Map<String, HandlerInterceptors<String>> interceptorsCache = new HashMap<>();
 
     /**
      * 前缀
@@ -57,6 +50,7 @@ public abstract class SpiderResolver extends ActionResources {
 
         JsonNode interceptorsNode = jsonNode.get("interceptors");
 
+        @SuppressWarnings("unchecked")
         HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>) BeanUtils.getBean(interceptorsNode);
 
         String prefix = interceptorsNode.get(PREFIX).asText();
