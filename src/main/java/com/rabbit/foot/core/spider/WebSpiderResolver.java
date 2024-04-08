@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.rabbit.foot.common.constant.Constants;
+import com.rabbit.foot.common.constant.NodeConstants;
 import com.rabbit.foot.network.HttpAsk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -66,9 +68,9 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * @return T
      */
     private List<T> convert(JsonNode action, ArrayNode arrayNode) {
-        JsonNode configObj = action.path("config");
+        JsonNode configObj = action.path(Constants.CONFIG);
 
-        String javaType = configObj.get("java-type").asText();
+        String javaType = configObj.get(Constants.JAVA_TYPE).asText();
         try {
 
             Class<?> Clazz = Class.forName(javaType);
@@ -94,7 +96,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      */
     private void requestWebPage(JsonNode httpAction) {
 
-        JsonNode siteObj = httpAction.path("site");
+        JsonNode siteObj = httpAction.path(Constants.SITE);
 
         HttpAsk<String> httpAsk = new HttpAsk<>(siteObj);
 
@@ -117,13 +119,13 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             return null;
         }
 
-        JsonNode node = resolverAction.path("resolver-action");
-        node = node.path("element");
+        JsonNode node = resolverAction.path(Constants.RESOLVER_ACTION);
+        node = node.path(Constants.ELEMENT);
         JsonMapper resultMap = new JsonMapper();
 
         ArrayNode arrayNode = resultMap.createArrayNode();
 
-        SpiderTemp temp = new SpiderTemp(arrayNode, node, null, this.webDocument, "obj");
+        SpiderTemp temp = new SpiderTemp(arrayNode, node, null, this.webDocument, NodeConstants.OBJECT);
 
         resolver(temp);
 
@@ -140,7 +142,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             return;
         }
 
-        if ("obj".equals(temp.lastType)) {
+        if (NodeConstants.OBJECT.equals(temp.lastType)) {
             getElement(temp);
         } else {
             for (Element element : temp.arr) {
@@ -149,12 +151,12 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             }
         }
 
-        if (!temp.action.has("element")) {
+        if (!temp.action.has(Constants.ELEMENT)) {
             return;
         }
 
         // 下一次动作
-        temp.action = temp.action.path("element");
+        temp.action = temp.action.path(Constants.ELEMENT);
 
         temp.next();
 
@@ -170,68 +172,68 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      */
     private void getElement(SpiderTemp temp) {
 
-        String elementType = temp.action.get("element-type").asText();
+        String elementType = temp.action.get(Constants.ELEMENT_TYPE).asText();
 
-        String elementValue = temp.action.get("element-value").asText();
+        String elementValue = temp.action.get(Constants.ELEMENT_VALUE).asText();
 
         switch (elementType) {
-            case "id":
+            case NodeConstants.ID:
                 temp.obj = temp.obj.getElementById(elementValue);
-                temp.lastType = "obj";
+                temp.lastType = NodeConstants.OBJECT;
                 break;
-            case "class":
-                if (temp.action.has("leaf-index")) {
-                    int anInt = temp.action.get("leaf-index").asInt();
+            case NodeConstants.CLASS:
+                if (temp.action.has(Constants.LEAF_INDEX)) {
+                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
                     temp.obj = temp.obj.getElementsByClass(elementValue).get(anInt);
-                    temp.lastType = "obj";
+                    temp.lastType = NodeConstants.OBJECT;
                 } else {
                     temp.arr = temp.obj.getElementsByClass(elementValue);
-                    temp.lastType = "arr";
+                    temp.lastType = NodeConstants.ARRAY;
                     nodeFiltering(temp.action, temp.arr);
                     temp.addChildNodes(temp.arr);
                 }
                 break;
 
-            case "tage":
-                if (temp.action.has("leaf-index")) {
-                    int anInt = temp.action.get("leaf-index").asInt();
+            case NodeConstants.TAGE:
+                if (temp.action.has(Constants.LEAF_INDEX)) {
+                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
                     temp.obj = temp.obj.getElementsByTag(elementValue).get(anInt);
-                    temp.lastType = "obj";
+                    temp.lastType = NodeConstants.OBJECT;
                 } else {
                     temp.arr = temp.obj.getElementsByTag(elementValue);
-                    temp.lastType = "arr";
+                    temp.lastType = NodeConstants.ARRAY;
                     nodeFiltering(temp.action, temp.arr);
                     temp.addChildNodes(temp.arr);
                 }
 
                 break;
-            case "result":
+            case NodeConstants.RESULT:
                 // 判断结果伪动作，标记开始组装结果
-                if (!temp.action.has("result-element")) {
+                if (!temp.action.has(Constants.RESULT_ELEMENT)) {
                     break;
                 }
                 // 获取结果动作集合
-                ArrayNode arrayNode = temp.action.withArray("result-element");
+                ArrayNode arrayNode = temp.action.withArray(Constants.RESULT_ELEMENT);
 
                 // 存储单个结果对象
                 ObjectNode objectNode = new ObjectMapper().createObjectNode();
 
                 // 遍历结果集合，组装到一个结果对象里
                 for (JsonNode jsonNode : arrayNode) {
-                    SpiderTemp AResult = new SpiderTemp(objectNode, jsonNode, null, temp.obj, "obj");
+                    SpiderTemp AResult = new SpiderTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
                     packageAssembly(AResult);
                 }
 
                 temp.content.add(objectNode);
                 break;
             default:
-                if (temp.action.has("leaf-index")) {
-                    int anInt = temp.action.get("leaf-index").asInt();
+                if (temp.action.has(Constants.LEAF_INDEX)) {
+                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
                     temp.obj = temp.obj.getElementsByAttribute(elementValue).get(anInt);
-                    temp.lastType = "obj";
+                    temp.lastType = NodeConstants.OBJECT;
                 } else {
                     temp.arr = temp.obj.getElementsByAttribute(elementValue);
-                    temp.lastType = "arr";
+                    temp.lastType = NodeConstants.ARRAY;
                     nodeFiltering(temp.action, temp.arr);
                     temp.addChildNodes(temp.arr);
                 }
@@ -247,7 +249,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             return;
         }
 
-        if ("obj".equals(aResult.lastType)) {
+        if (NodeConstants.OBJECT.equals(aResult.lastType)) {
             structuralAnalysisMap(aResult);
         } else {
             for (Element element : aResult.arr) {
@@ -256,11 +258,11 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
             }
         }
 
-        if (!aResult.action.has("element")) {
+        if (!aResult.action.has(Constants.ELEMENT)) {
             return;
         }
 
-        aResult.action = aResult.action.path("element");
+        aResult.action = aResult.action.path(Constants.ELEMENT);
 
         aResult.next();
 
@@ -273,41 +275,41 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      */
     private void structuralAnalysisMap(SpiderTemp aResult) {
 
-        if (!aResult.action.has("element-type") || !aResult.action.has("element-value")) {
+        if (!aResult.action.has(Constants.ELEMENT_TYPE) || !aResult.action.has(Constants.ELEMENT_VALUE)) {
             return;
         }
 
-        String elementType = aResult.action.get("element-type").asText();
-        String elementValue = aResult.action.get("element-value").asText();
+        String elementType = aResult.action.get(Constants.ELEMENT_TYPE).asText();
+        String elementValue = aResult.action.get(Constants.ELEMENT_VALUE).asText();
 
         switch (elementType) {
-            case "id":
+            case NodeConstants.ID:
                 aResult.obj = aResult.obj.getElementById(elementValue);
                 results2Json(aResult);
-                aResult.lastType = "obj";
+                aResult.lastType = NodeConstants.OBJECT;
                 break;
-            case "class":
-                if (aResult.action.has("leaf-index")) {
-                    int anInt = aResult.action.get("leaf-index").asInt();
+            case NodeConstants.CLASS:
+                if (aResult.action.has(Constants.LEAF_INDEX)) {
+                    int anInt = aResult.action.get(Constants.LEAF_INDEX).asInt();
                     try {
                         aResult.obj = aResult.obj.getElementsByClass(elementValue).get(anInt);
                     } catch (Exception e) {
                         return;
                     }
                     results2Json(aResult);
-                    aResult.lastType = "obj";
+                    aResult.lastType = NodeConstants.OBJECT;
 
                 } else {
                     aResult.arr = aResult.obj.getElementsByClass(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = "array";
+                    aResult.lastType = NodeConstants.ARRAY;
                     aResult.addChildNodes(aResult.arr);
                 }
                 break;
 
-            case "tage":
-                if (aResult.action.has("leaf-index")) {
-                    int anInt = aResult.action.get("leaf-index").asInt();
+            case NodeConstants.TAGE:
+                if (aResult.action.has(Constants.LEAF_INDEX)) {
+                    int anInt = aResult.action.get(Constants.LEAF_INDEX).asInt();
 
                     try {
                         aResult.obj = aResult.obj.getElementsByTag(elementValue).get(anInt);
@@ -317,16 +319,16 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
                     results2Json(aResult);
 
-                    aResult.lastType = "obj";
+                    aResult.lastType = NodeConstants.OBJECT;
 
                 } else {
                     aResult.arr = aResult.obj.getElementsByTag(elementValue);
                     nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = "array";
+                    aResult.lastType = NodeConstants.ARRAY;
                     aResult.addChildNodes(aResult.arr);
                 }
                 break;
-            case "content":
+            case NodeConstants.CONTENT:
                 results2Json(aResult);
                 break;
         }
@@ -336,21 +338,21 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
      * 将结果组装为Json对象
      */
     private void results2Json(SpiderTemp aResult) {
-        if (!aResult.action.has("is-leaf") || !aResult.action.has("target-key")) {
+        if (!aResult.action.has(Constants.IS_LEAF) || !aResult.action.has(Constants.TARGET_KEY)) {
             return;
         }
 
-        String target = aResult.action.get("target-key").asText();
+        String target = aResult.action.get(Constants.TARGET_KEY).asText();
 
-        if (target.equals("text")) {
+        if (target.equals(NodeConstants.TEXT)) {
             String text = aResult.obj.text();
-            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(text, aResult.action));
-        } else if (target.equals("html")) {
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(text, aResult.action));
+        } else if (target.equals(NodeConstants.HTML)) {
             String html = aResult.obj.html();
-            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(html, aResult.action));
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(html, aResult.action));
         } else {
             String attribute = aResult.obj.attr(target);
-            aResult.contentTemp.put(aResult.action.get("result-key").asText(), interceptors(attribute, aResult.action));
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(attribute, aResult.action));
         }
     }
 
@@ -397,7 +399,7 @@ public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> 
 
             this.arr = this.childNode.clone();
             this.clearChildNode();
-            this.lastType = "array";
+            this.lastType = NodeConstants.ARRAY;
         }
 
         public void addChildNodes(Elements elements) {

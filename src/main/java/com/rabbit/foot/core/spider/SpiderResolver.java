@@ -2,6 +2,8 @@ package com.rabbit.foot.core.spider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.rabbit.foot.common.constant.Constants;
+import com.rabbit.foot.common.constant.NodeConstants;
 import com.rabbit.foot.core.ActionResources;
 import com.rabbit.foot.interceptors.HandlerInterceptors;
 import com.rabbit.foot.common.utils.BeanUtils;
@@ -26,16 +28,6 @@ public abstract class SpiderResolver extends ActionResources {
      */
     protected Document webDocument;
 
-    /**
-     * 前缀
-     */
-    private static final String PREFIX = "prefix";
-
-    /**
-     * 后缀
-     */
-    private static final String SUFFIX = "suffix";
-
 
     /**
      * 执行爬虫动作指定的拦截器
@@ -44,17 +36,17 @@ public abstract class SpiderResolver extends ActionResources {
      * @param jsonNode 拦截器描述
      */
     public String interceptors(String handler, JsonNode jsonNode) {
-        if (jsonNode == null || !jsonNode.has("interceptors")) {
+        if (jsonNode == null || !jsonNode.has(Constants.INTERCEPTORS)) {
             return handler;
         }
 
-        JsonNode interceptorsNode = jsonNode.get("interceptors");
+        JsonNode interceptorsNode = jsonNode.get(Constants.INTERCEPTORS);
 
         @SuppressWarnings("unchecked")
         HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>) BeanUtils.getBean(interceptorsNode);
 
-        String prefix = interceptorsNode.get(PREFIX).asText();
-        String suffix = interceptorsNode.get(SUFFIX).asText();
+        String prefix = interceptorsNode.get(Constants.PREFIX).asText();
+        String suffix = interceptorsNode.get(Constants.SUFFIX).asText();
 
         return interceptors.handle(handler, prefix, suffix);
     }
@@ -66,11 +58,11 @@ public abstract class SpiderResolver extends ActionResources {
      * @param elements 节点集合
      */
     public void nodeFiltering(JsonNode jsonNode, Elements elements) {
-        if (jsonNode == null || !jsonNode.has("remove") || elements == null || elements.isEmpty()) {
+        if (jsonNode == null || !jsonNode.has(Constants.REMOVE) || elements == null || elements.isEmpty()) {
             return;
         }
 
-        ArrayNode removeArrayNode = jsonNode.withArray("remove");
+        ArrayNode removeArrayNode = jsonNode.withArray(Constants.REMOVE);
 
         Iterator<Element> iterator = elements.iterator();
 
@@ -79,11 +71,11 @@ public abstract class SpiderResolver extends ActionResources {
 
             for (JsonNode action : removeArrayNode) {
 
-                String elementType = action.get("element-type").asText();
+                String elementType = action.get(Constants.REMOVE_ELEMENT_TYPE).asText();
 
-                String elementValue = action.get("element-value").asText();
+                String elementValue = action.get(Constants.REMOVE_ELEMENT_VALUE).asText();
                 switch (elementType) {
-                    case "id":
+                    case NodeConstants.ID:
                         Element elementById = element.getElementById(elementValue);
 
                         if (elementById != null) {
@@ -91,7 +83,7 @@ public abstract class SpiderResolver extends ActionResources {
                             continue;
                         }
                         break;
-                    case "class":
+                    case NodeConstants.CLASS:
                         try {
                             Elements elementsByClass = element.getElementsByClass(elementValue);
                             if (!elementsByClass.isEmpty()) {
@@ -104,7 +96,7 @@ public abstract class SpiderResolver extends ActionResources {
                         iterator.remove();
                         break;
 
-                    case "tage":
+                    case NodeConstants.TAGE:
                         try {
                             Elements elementsByTag = element.getElementsByTag(elementValue);
                             if (!elementsByTag.isEmpty()) {

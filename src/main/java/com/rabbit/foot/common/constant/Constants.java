@@ -8,7 +8,7 @@ package com.rabbit.foot.common.constant;
  * @author LiAo
  * @since 2024-04-08
  */
-public class SpiderActionConstants {
+public class Constants {
 
     /**
      * 书籍爬虫动作集合
@@ -68,7 +68,7 @@ public class SpiderActionConstants {
     /**
      * 解析动作
      */
-    public static final String RESOLVER_ACTION = "params";
+    public static final String RESOLVER_ACTION = "resolver-action";
 
     /**
      * 解析节点描述
@@ -112,6 +112,11 @@ public class SpiderActionConstants {
     public static final String TARGET_KEY = "target-key";
 
     /**
+     * 结果节点
+     */
+    public static final String RESULT_ELEMENT = "result-element";
+
+    /**
      * 对应的属性值
      */
     public static final String RESULT_KEY = "result-key";
@@ -127,24 +132,19 @@ public class SpiderActionConstants {
     public static final String INTERCEPTORS = "interceptors";
 
     /**
-     * 结果拦截器类型
-     */
-    public static final String INTERCEPTORS_TYPE = "type";
-
-    /**
      * 结果拦截器 前缀
      */
-    public static final String prefix = "prefix";
+    public static final String PREFIX = "prefix";
 
     /**
      * 结果拦截器 后缀
      */
-    public static final String suffix = "suffix";
+    public static final String SUFFIX = "suffix";
 
     /**
      * 要删除的节点集合
      */
-    public static final String remove = "remove";
+    public static final String REMOVE = "remove";
 
     /**
      * 要删除的节点属性值类型

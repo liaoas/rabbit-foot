@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.utils.ConvertUtils;
 
 import java.util.Map;
@@ -38,7 +39,7 @@ public class HttpAsk<T> {
 
         HttpRequest httpRequest = httpRequestBuild();
 
-        String method = this.action.get("method").asText();
+        String method = this.action.get(Constants.METHOD).asText();
 
         if (method.equalsIgnoreCase(GET)) {
             return get(httpRequest);
@@ -57,17 +58,17 @@ public class HttpAsk<T> {
     private HttpRequest httpRequestBuild() {
         HttpRequest httpRequest = null;
 
-        if (action.has("url")) {
-            httpRequest = HttpRequest.of(action.get("url").asText());
+        if (action.has(Constants.URL)) {
+            httpRequest = HttpRequest.of(action.get(Constants.URL).asText());
         }
 
         if (ObjUtil.isNull(httpRequest)) {
             throw new IllegalArgumentException("爬虫动作描述资源缺失");
         }
 
-        if (action.has("headers")) {
+        if (action.has(Constants.HEADERS)) {
             // 将 JsonObject 转换为 Map
-            Map<String, String> result = ConvertUtils.jsonNodeToMapStrStr(action.get("headers"));
+            Map<String, String> result = ConvertUtils.jsonNodeToMapStrStr(action.get(Constants.HEADERS));
             for (Map.Entry<String, String> header : result.entrySet()) {
                 String key = header.getKey();
                 String value = header.getValue();
@@ -75,9 +76,9 @@ public class HttpAsk<T> {
             }
         }
 
-        if (action.has("params")) {
+        if (action.has(Constants.PARAMS)) {
             // 将 JsonObject 转换为 Map
-            Map<String, Object> result = ConvertUtils.jsonNodeToMapStrObj(action.get("params"));
+            Map<String, Object> result = ConvertUtils.jsonNodeToMapStrObj(action.get(Constants.PARAMS));
 
             httpRequest = httpRequest.form(result);
         }

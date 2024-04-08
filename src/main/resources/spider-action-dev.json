@@ -597,7 +597,7 @@
       "spider-type": "chapter",
       "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
       "config": {
-        "java-type": "com.cobalt.entity.Chapter"
+        "java-type": "com.rabbit.foot.entity.Chapter"
       },
       "site": {
         "method": "GET",

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.core.github.GitHubFileReader;
 
 import java.io.IOException;
@@ -142,7 +143,7 @@ public class Resources {
             return null;
         }
 
-        ArrayNode books = objectNode.withArray("books");
+        ArrayNode books = objectNode.withArray(Constants.BOOKS);
 
         if (books.size() <= 0) {
             throw new IllegalArgumentException("spider-action-test.json 爬虫资源为空");
@@ -151,7 +152,7 @@ public class Resources {
         HashSet<String> names = new HashSet<>();
 
         for (JsonNode book : books) {
-            String name = book.get("name").asText();
+            String name = book.get(Constants.NAME).asText();
             names.add(name);
         }
 

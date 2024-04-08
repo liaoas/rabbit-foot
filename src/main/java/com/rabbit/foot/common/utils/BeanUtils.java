@@ -1,6 +1,7 @@
 package com.rabbit.foot.common.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.rabbit.foot.common.constant.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +28,11 @@ public class BeanUtils {
      */
     public static Object getBean(JsonNode jsonNode) {
 
-        if (jsonNode == null || !jsonNode.has("type")) {
+        if (jsonNode == null || !jsonNode.has(Constants.TYPE)) {
             throw new RuntimeException("Bean对象获取失败，对象描述Json为空");
         }
 
-        String javaType = jsonNode.get("type").asText();
+        String javaType = jsonNode.get(Constants.TYPE).asText();
 
         return getBean(javaType);
     }
