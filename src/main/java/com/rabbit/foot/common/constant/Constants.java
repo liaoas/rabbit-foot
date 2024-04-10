@@ -86,16 +86,6 @@ public class Constants {
     public static final String ELEMENT_VALUE = "element-value";
 
     /**
-     * 节点类型 obj、array
-     */
-    public static final String CONTENT_TYPE = "content-type";
-
-    /**
-     * 是否开始组装结果
-     */
-    public static final String START_ASSEMBLY = "start-assembly";
-
-    /**
      * 若有多个相同节点，获取从 0 开始指定下标的单个节点
      */
     public static final String LEAF_INDEX = "leaf-index";
@@ -120,11 +110,6 @@ public class Constants {
      * 对应的属性值
      */
     public static final String RESULT_KEY = "result-key";
-
-    /**
-     * 是否末级节点
-     */
-    public static final String result_end = "result-end";
 
     /**
      * 结果拦截器

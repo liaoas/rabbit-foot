@@ -27,7 +27,7 @@ public class Resources {
 
     private static final Logger logger = Logger.getLogger(GitHubFileReader.class.getName());
 
-    private static ObjectNode objectNode = null;
+    private static volatile ObjectNode objectNode = null;
 
     private static final String errorRule = "{\"rule\":\"error\"}";
 
