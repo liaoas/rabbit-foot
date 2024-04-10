@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.spider;
+package com.rabbit.foot.core.resolver;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,13 +15,13 @@ import java.util.Iterator;
 
 /**
  * <p>
- * 爬虫解析抽象类
+ * 爬虫基础类
  * </p>
  *
  * @author LiAo
  * @since 2023-09-20
  */
-public abstract class SpiderResolver extends ActionResources {
+public abstract class BaseResolver extends ActionResources {
 
     /**
      * 爬取的Web节点

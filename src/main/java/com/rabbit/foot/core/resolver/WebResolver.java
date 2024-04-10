@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.spider;
+package com.rabbit.foot.core.resolver;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
  * @author LiAo
  * @since 2023-08-16
  */
-public class WebSpiderResolver<T> extends SpiderResolver implements Resolver<T> {
+public class WebResolver<T> extends BaseResolver implements Resolver<T> {
 
     /**
      * 爬虫执行

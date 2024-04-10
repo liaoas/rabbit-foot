@@ -2,7 +2,7 @@ package com.rabbit.foot.core.factory;
 
 import com.rabbit.foot.common.enums.ReptileType;
 import com.rabbit.foot.core.resources.ActionResources;
-import com.rabbit.foot.core.spider.Resolver;
+import com.rabbit.foot.core.resolver.Resolver;
 import com.rabbit.foot.common.utils.BeanUtils;
 
 import java.net.URL;

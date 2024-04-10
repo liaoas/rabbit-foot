@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.spider;
+package com.rabbit.foot.core.resolver;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

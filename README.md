@@ -23,7 +23,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
     {
       "name": "新笔趣阁",
       "spider-type": "search",
-      "type": "com.rabbit.foot.core.spider.WebSpiderResolver",
+      "type": "com.rabbit.foot.core.resolver.WebResolver",
       "site": {
         "method": "GET",
         "url": "http://localhost/abc/",
