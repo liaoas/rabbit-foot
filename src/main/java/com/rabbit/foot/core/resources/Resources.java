@@ -1,4 +1,4 @@
-package com.rabbit.foot.core;
+package com.rabbit.foot.core.resources;
 
 import cn.hutool.core.util.ObjUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;

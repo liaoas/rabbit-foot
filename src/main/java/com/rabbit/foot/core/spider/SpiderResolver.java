@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
-import com.rabbit.foot.core.ActionResources;
+import com.rabbit.foot.core.resources.ActionResources;
 import com.rabbit.foot.interceptors.HandlerInterceptors;
 import com.rabbit.foot.common.utils.BeanUtils;
 import org.jsoup.nodes.Document;
