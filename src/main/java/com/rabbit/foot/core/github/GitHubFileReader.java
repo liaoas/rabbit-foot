@@ -3,6 +3,7 @@ package com.rabbit.foot.core.github;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbit.foot.common.utils.ConvertUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,10 +23,7 @@ import java.util.logging.Logger;
  * @since 2023-11-30
  */
 public class GitHubFileReader {
-
     private static final Logger logger = Logger.getLogger(GitHubFileReader.class.getName());
-
-
     public static final String GITHUB_API_URL = "https://api.github.com/repos/%s/%s/contents/%s";
 
     /**
@@ -92,20 +90,9 @@ public class GitHubFileReader {
      * @return 文件内容
      */
     private static String parseFileContent(String jsonResponse) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        JsonNode jsonNode;
-
-        try {
-            jsonNode = objectMapper.readTree(jsonResponse);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        JsonNode jsonNode = ConvertUtils.jsonStrToJsonNode(jsonResponse);
         String base64Content = jsonNode.get("content").asText();
-
         base64Content = base64Content.replaceAll("\\\\n", "");
-
         byte[] decodedBytes;
 
         try {
@@ -113,6 +100,7 @@ public class GitHubFileReader {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 }

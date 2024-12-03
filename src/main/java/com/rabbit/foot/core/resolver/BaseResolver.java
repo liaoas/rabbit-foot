@@ -43,8 +43,8 @@ public abstract class BaseResolver extends ActionResources {
         JsonNode interceptorsNode = jsonNode.get(Constants.INTERCEPTORS);
 
         @SuppressWarnings("unchecked")
-        HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>) BeanUtils.getBean(interceptorsNode);
-
+        HandlerInterceptors<String> interceptors = (HandlerInterceptors<String>)
+                BeanUtils.getBean(interceptorsNode);
         String prefix = interceptorsNode.get(Constants.PREFIX).asText();
         String suffix = interceptorsNode.get(Constants.SUFFIX).asText();
 
@@ -63,21 +63,16 @@ public abstract class BaseResolver extends ActionResources {
         }
 
         ArrayNode removeArrayNode = jsonNode.withArray(Constants.REMOVE);
-
         Iterator<Element> iterator = elements.iterator();
 
         while (iterator.hasNext()) {
             Element element = iterator.next();
-
             for (JsonNode action : removeArrayNode) {
-
                 String elementType = action.get(Constants.REMOVE_ELEMENT_TYPE).asText();
-
                 String elementValue = action.get(Constants.REMOVE_ELEMENT_VALUE).asText();
                 switch (elementType) {
                     case NodeConstants.ID:
                         Element elementById = element.getElementById(elementValue);
-
                         if (elementById != null) {
                             iterator.remove();
                             continue;
@@ -122,8 +117,5 @@ public abstract class BaseResolver extends ActionResources {
                 }
             }
         }
-
-
     }
-
 }
