@@ -1,8 +1,6 @@
 package com.rabbit.foot.core.github;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbit.foot.common.utils.ConvertUtils;
 
 import java.io.BufferedReader;
