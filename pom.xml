@@ -34,6 +34,6 @@
       <artifactId>hutool-http</artifactId>
       <version>5.8.25</version>
     </dependency>
-
   </dependencies>
+
 </project>
