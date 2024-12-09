@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.resources;
+package com.rabbit.foot.loader;
 
 import cn.hutool.core.util.ObjUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.common.constant.Constants;
-import com.rabbit.foot.core.github.GitHubFileReader;
+import com.rabbit.foot.github.GitHubFileReader;
 
 import java.io.IOException;
 import java.net.URL;

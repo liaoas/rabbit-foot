@@ -1,8 +1,8 @@
-package com.rabbit.foot.core.factory;
+package com.rabbit.foot.factory;
 
 import com.rabbit.foot.common.enums.ReptileType;
-import com.rabbit.foot.core.resources.ActionResources;
-import com.rabbit.foot.core.resolver.Resolver;
+import com.rabbit.foot.loader.ActionResources;
+import com.rabbit.foot.parser.Parser;
 import com.rabbit.foot.common.utils.BeanUtils;
 
 import java.net.URL;
@@ -43,7 +43,7 @@ public class ResolverFactory<T> extends ActionResources {
      * @return 爬虫结果
      */
     public List<T> capture() {
-        Resolver<T> bean = (Resolver<T>) BeanUtils.getBean(activeRes);
+        Parser<T> bean = (Parser<T>) BeanUtils.getBean(activeRes);
         return bean.execute(activeRes);
     }
 }

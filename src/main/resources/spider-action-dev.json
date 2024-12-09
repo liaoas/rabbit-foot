@@ -3,7 +3,7 @@
     {
       "name": "书本网",
       "spider-type": "search",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -116,7 +116,7 @@
     {
       "name": "书本网",
       "spider-type": "chapter",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.Chapter"
       },
@@ -183,7 +183,7 @@
     {
       "name": "书本网",
       "spider-type": "content",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "java.lang.String"
       },
@@ -229,7 +229,7 @@
     {
       "name": "笔趣阁",
       "spider-type": "search",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -349,7 +349,7 @@
     {
       "name": "笔趣阁dev",
       "spider-type": "search",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -489,7 +489,7 @@
     {
       "name": "选书网",
       "spider-type": "search",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -595,7 +595,7 @@
     {
       "name": "选书网",
       "spider-type": "chapter",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.Chapter"
       },
@@ -662,7 +662,7 @@
     {
       "name": "选书网",
       "spider-type": "content",
-      "type": "com.rabbit.foot.core.resolver.html.WebResolver",
+      "type": "com.rabbit.foot.parser.html.HtmlParser",
       "config": {
         "java-type": "java.lang.String"
       },

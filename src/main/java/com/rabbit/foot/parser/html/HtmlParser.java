@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.resolver.html;
+package com.rabbit.foot.parser.html;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
-import com.rabbit.foot.core.resolver.BaseResolver;
-import com.rabbit.foot.core.resolver.Resolver;
+import com.rabbit.foot.parser.BaseParser;
+import com.rabbit.foot.parser.Parser;
 import com.rabbit.foot.network.HttpAsk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
  * @author LiAo
  * @since 2023-08-16
  */
-public class WebResolver<T> extends BaseResolver implements Resolver<T> {
+public class HtmlParser<T> extends BaseParser implements Parser<T> {
 
     /**
      * 爬虫执行
@@ -66,7 +66,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
             return null;
         }
 
-        HtmlTemp temp = new HtmlTemp(resolverAction, this.webDocument);
+        HtmlNodeTemp temp = new HtmlNodeTemp(resolverAction, this.webDocument);
 
         resolver(temp);
 
@@ -131,7 +131,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
      *
      * @param temp 存储爬虫解析参数
      */
-    private void resolver(HtmlTemp temp) {
+    private void resolver(HtmlNodeTemp temp) {
         if (ObjUtil.isNull(temp.action)) {
             return;
         }
@@ -164,7 +164,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
      *
      * @param temp 存储爬虫解析参数
      */
-    private void getElement(HtmlTemp temp) {
+    private void getElement(HtmlNodeTemp temp) {
 
         String elementType = temp.action.get(Constants.ELEMENT_TYPE).asText();
 
@@ -214,7 +214,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
 
                 // 遍历结果集合，组装到一个结果对象里
                 for (JsonNode jsonNode : arrayNode) {
-                    HtmlTemp AResult = new HtmlTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
+                    HtmlNodeTemp AResult = new HtmlNodeTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
                     packageAssembly(AResult);
                 }
 
@@ -238,7 +238,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 递归解析结果节点描述部分并组装成结果对象
      */
-    private void packageAssembly(HtmlTemp aResult) {
+    private void packageAssembly(HtmlNodeTemp aResult) {
         if (ObjUtil.isNull(aResult.action)) {
             return;
         }
@@ -267,7 +267,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 结果解析并填充 JsonObject 对象属性：属性值
      */
-    private void structuralAnalysisMap(HtmlTemp aResult) {
+    private void structuralAnalysisMap(HtmlNodeTemp aResult) {
 
         if (!aResult.action.has(Constants.ELEMENT_TYPE) || !aResult.action.has(Constants.ELEMENT_VALUE)) {
             return;
@@ -331,7 +331,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 将结果组装为Json对象
      */
-    private void results2Json(HtmlTemp aResult) {
+    private void results2Json(HtmlNodeTemp aResult) {
         if (!aResult.action.has(Constants.IS_LEAF) || !aResult.action.has(Constants.TARGET_KEY)) {
             return;
         }

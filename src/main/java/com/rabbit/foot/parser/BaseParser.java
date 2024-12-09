@@ -1,10 +1,10 @@
-package com.rabbit.foot.core.resolver;
+package com.rabbit.foot.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
-import com.rabbit.foot.core.resources.ActionResources;
+import com.rabbit.foot.loader.ActionResources;
 import com.rabbit.foot.interceptors.HandlerInterceptors;
 import com.rabbit.foot.common.utils.BeanUtils;
 import org.jsoup.nodes.Document;
@@ -21,7 +21,7 @@ import java.util.Iterator;
  * @author LiAo
  * @since 2023-09-20
  */
-public abstract class BaseResolver extends ActionResources {
+public abstract class BaseParser extends ActionResources {
 
     /**
      * 爬取的Web节点

@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.resolver.html;
+package com.rabbit.foot.parser.html;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
  * @author LiAo
  * @since 2024/12/9
  */
-public class HtmlTemp {
+public class HtmlNodeTemp {
 
     // 存储爬虫结果内容集合
     ArrayNode content;
@@ -33,7 +33,7 @@ public class HtmlTemp {
     Elements childNode = new Elements();
 
 
-    public HtmlTemp(JsonNode action, Element webDocument) {
+    public HtmlNodeTemp(JsonNode action, Element webDocument) {
 
         JsonNode node = action.path(Constants.RESOLVER_ACTION);
         node = node.path(Constants.ELEMENT);
@@ -46,7 +46,7 @@ public class HtmlTemp {
     }
 
 
-    public HtmlTemp(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
+    public HtmlNodeTemp(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
         this.contentTemp = contentTemp;
         this.action = action;
         this.arr = arr;

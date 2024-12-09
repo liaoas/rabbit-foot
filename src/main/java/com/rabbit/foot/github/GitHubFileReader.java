@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.github;
+package com.rabbit.foot.github;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rabbit.foot.common.utils.ConvertUtils;

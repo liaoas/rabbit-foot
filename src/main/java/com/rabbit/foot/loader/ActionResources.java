@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.resources;
+package com.rabbit.foot.loader;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;

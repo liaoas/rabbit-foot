@@ -1,7 +1,7 @@
 package com.rabbit.foot;
 
 import com.rabbit.foot.common.enums.ReptileType;
-import com.rabbit.foot.core.factory.ResolverFactory;
+import com.rabbit.foot.factory.ResolverFactory;
 import com.rabbit.foot.entity.BookData;
 import com.rabbit.foot.entity.Chapter;
 
