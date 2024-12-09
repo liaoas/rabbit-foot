@@ -90,7 +90,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     }
 
     /**
-     * 根据指定的爬虫动作抓取目标内容页面
+     * 根据指定的爬虫行为抓取目标内容页面
      *
      * @param httpAction http 执行动作
      */
@@ -109,7 +109,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     }
 
     /**
-     * 根据爬虫动作解析HTML
+     * 根据爬虫行为解析HTML
      *
      * @param resolverAction 解析动作
      * @return 爬取结果
@@ -362,7 +362,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
         ArrayNode content;
         // 存储单条爬虫结果
         ObjectNode contentTemp;
-        // 爬虫动作
+        // 爬虫行为
         JsonNode action;
         // 存储多个节点
         Elements arr;

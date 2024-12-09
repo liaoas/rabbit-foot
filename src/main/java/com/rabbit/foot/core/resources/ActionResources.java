@@ -13,7 +13,7 @@ import java.net.URL;
 
 /**
  * <p>
- * 爬虫动作描述资源类
+ * 爬虫行为描述资源类
  * </p>
  *
  * @author LiAo
@@ -29,7 +29,7 @@ public abstract class ActionResources {
 
     public ReptileType spiderType;
 
-    // 当前使用的爬虫动作
+    // 当前使用的爬虫行为
     protected JsonNode activeRes;
 
     /**
@@ -66,7 +66,7 @@ public abstract class ActionResources {
     }
 
     /**
-     * 获取指定名称的爬虫动作
+     * 获取指定名称的爬虫行为
      *
      * @param objectNode 爬虫资源
      * @param params     爬虫http填充

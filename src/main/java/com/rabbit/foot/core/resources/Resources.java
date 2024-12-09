@@ -48,7 +48,7 @@ public class Resources {
 
 
     /**
-     * 加载爬虫动作
+     * 加载爬虫行为的描述文件
      */
     private static void loadSpiderAction() {
 
@@ -82,7 +82,9 @@ public class Resources {
 
 
     /**
-     * 加载爬虫动作
+     * 根据指定 URL 加载爬虫行为的描述文件
+     *
+     * @param url url
      */
     private static void loadSpiderAction(URL url) {
 
@@ -108,7 +110,9 @@ public class Resources {
     }
 
     /**
-     * 加载爬虫动作
+     * 根据指定 json 字符串 加载爬虫行为的描述文件
+     *
+     * @param jsonStr 爬虫行行为描述
      */
     private static void loadSpiderAction(String jsonStr) {
 
@@ -146,7 +150,7 @@ public class Resources {
         ArrayNode books = objectNode.withArray(Constants.BOOKS);
 
         if (books.size() <= 0) {
-            throw new IllegalArgumentException("spider-action-test.json 爬虫资源为空");
+            throw new IllegalArgumentException("spider-action-test.json 爬虫行为资源为空");
         }
 
         HashSet<String> names = new HashSet<>();

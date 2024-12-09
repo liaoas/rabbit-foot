@@ -17,7 +17,7 @@ public class JsonResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 爬虫执行
      *
-     * @param activeRes 爬虫动作描述
+     * @param activeRes 爬虫行为描述
      */
     @Override
     public List<T> execute(JsonNode activeRes) {

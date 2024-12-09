@@ -30,7 +30,7 @@ public abstract class BaseResolver extends ActionResources {
 
 
     /**
-     * 执行爬虫动作指定的拦截器
+     * 执行爬虫行为指定的拦截器
      *
      * @param handler  待处理的爬虫结果
      * @param jsonNode 拦截器描述

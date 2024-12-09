@@ -2,7 +2,7 @@ package com.rabbit.foot.common.constant;
 
 /**
  * <p>
- * 爬虫动作Json Key 常量
+ * 爬虫行为Json Key 常量
  * </p>
  *
  * @author LiAo
@@ -11,7 +11,7 @@ package com.rabbit.foot.common.constant;
 public class Constants {
 
     /**
-     * 书籍爬虫动作集合
+     * 书籍爬虫行为集合
      */
     public static final String BOOKS = "books";
 

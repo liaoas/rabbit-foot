@@ -63,7 +63,7 @@ public class HttpAsk<T> {
         }
 
         if (ObjUtil.isNull(httpRequest)) {
-            throw new IllegalArgumentException("爬虫动作描述资源缺失");
+            throw new IllegalArgumentException("爬虫行为描述资源缺失");
         }
 
         if (action.has(Constants.HEADERS)) {
