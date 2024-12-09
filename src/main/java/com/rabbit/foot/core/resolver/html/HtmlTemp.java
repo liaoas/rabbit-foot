@@ -33,7 +33,7 @@ public class HtmlTemp {
     Elements childNode = new Elements();
 
 
-    public HtmlTemp(JsonNode action) {
+    public HtmlTemp(JsonNode action, Element webDocument) {
 
         JsonNode node = action.path(Constants.RESOLVER_ACTION);
         node = node.path(Constants.ELEMENT);
@@ -41,7 +41,7 @@ public class HtmlTemp {
         this.content = new JsonMapper().createArrayNode();
         this.action = node;
         this.arr = null;
-        this.obj = null;
+        this.obj = webDocument;
         this.lastType = NodeConstants.OBJECT;
     }
 

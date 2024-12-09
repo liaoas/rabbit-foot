@@ -66,7 +66,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
             return null;
         }
 
-        HtmlTemp temp = new HtmlTemp(resolverAction);
+        HtmlTemp temp = new HtmlTemp(resolverAction, this.webDocument);
 
         resolver(temp);
 

@@ -491,7 +491,7 @@
       "spider-type": "search",
       "type": "com.rabbit.foot.core.resolver.html.WebResolver",
       "config": {
-        "java-type": "com.cobalt.entity.BookData"
+        "java-type": "com.rabbit.foot.entity.BookData"
       },
       "site": {
         "method": "GET",
