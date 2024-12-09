@@ -1,4 +1,4 @@
-package com.rabbit.foot.core.resolver;
+package com.rabbit.foot.core.resolver.html;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.core.resolver.BaseResolver;
+import com.rabbit.foot.core.resolver.Resolver;
 import com.rabbit.foot.network.HttpAsk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
