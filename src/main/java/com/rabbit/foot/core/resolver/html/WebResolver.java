@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.common.constant.Constants;
@@ -15,7 +14,6 @@ import com.rabbit.foot.core.resolver.Resolver;
 import com.rabbit.foot.network.HttpAsk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,15 +49,32 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
         }
 
         // 解析 HTML 节点
-        ArrayNode arrayNode = webElementResolver(activeRes);
+        ArrayNode arrayNode = elementResolver(activeRes);
 
-        if (arrayNode != null && arrayNode.size() <= 0) {
+        return convert(activeRes, arrayNode);
+    }
+
+    /**
+     * 根据爬虫行为解析HTML
+     *
+     * @param resolverAction 解析动作
+     * @return 爬取结果
+     */
+    private ArrayNode elementResolver(JsonNode resolverAction) {
+
+        if (ObjUtil.isNull(resolverAction)) {
+            return null;
+        }
+
+        HtmlTemp temp = new HtmlTemp(resolverAction);
+
+        resolver(temp);
+
+        if (temp.content != null && temp.content.size() <= 0) {
             throw new RuntimeException("抓取目标网站失败");
         }
 
-        assert arrayNode != null;
-
-        return convert(activeRes, arrayNode);
+        return temp.content;
     }
 
     /**
@@ -110,36 +125,13 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
         this.webDocument = Jsoup.parse(content);
     }
 
-    /**
-     * 根据爬虫行为解析HTML
-     *
-     * @param resolverAction 解析动作
-     * @return 爬取结果
-     */
-    private ArrayNode webElementResolver(JsonNode resolverAction) {
-        if (ObjUtil.isNull(resolverAction)) {
-            return null;
-        }
-
-        JsonNode node = resolverAction.path(Constants.RESOLVER_ACTION);
-        node = node.path(Constants.ELEMENT);
-        JsonMapper resultMap = new JsonMapper();
-
-        ArrayNode arrayNode = resultMap.createArrayNode();
-
-        SpiderTemp temp = new SpiderTemp(arrayNode, node, null, this.webDocument, NodeConstants.OBJECT);
-
-        resolver(temp);
-
-        return arrayNode;
-    }
 
     /**
      * 递归解析HTML节点至结果节点->packageAssembly()
      *
      * @param temp 存储爬虫解析参数
      */
-    private void resolver(SpiderTemp temp) {
+    private void resolver(HtmlTemp temp) {
         if (ObjUtil.isNull(temp.action)) {
             return;
         }
@@ -172,7 +164,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
      *
      * @param temp 存储爬虫解析参数
      */
-    private void getElement(SpiderTemp temp) {
+    private void getElement(HtmlTemp temp) {
 
         String elementType = temp.action.get(Constants.ELEMENT_TYPE).asText();
 
@@ -222,7 +214,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
 
                 // 遍历结果集合，组装到一个结果对象里
                 for (JsonNode jsonNode : arrayNode) {
-                    SpiderTemp AResult = new SpiderTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
+                    HtmlTemp AResult = new HtmlTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
                     packageAssembly(AResult);
                 }
 
@@ -246,7 +238,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 递归解析结果节点描述部分并组装成结果对象
      */
-    private void packageAssembly(SpiderTemp aResult) {
+    private void packageAssembly(HtmlTemp aResult) {
         if (ObjUtil.isNull(aResult.action)) {
             return;
         }
@@ -275,7 +267,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 结果解析并填充 JsonObject 对象属性：属性值
      */
-    private void structuralAnalysisMap(SpiderTemp aResult) {
+    private void structuralAnalysisMap(HtmlTemp aResult) {
 
         if (!aResult.action.has(Constants.ELEMENT_TYPE) || !aResult.action.has(Constants.ELEMENT_VALUE)) {
             return;
@@ -339,7 +331,7 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
     /**
      * 将结果组装为Json对象
      */
-    private void results2Json(SpiderTemp aResult) {
+    private void results2Json(HtmlTemp aResult) {
         if (!aResult.action.has(Constants.IS_LEAF) || !aResult.action.has(Constants.TARGET_KEY)) {
             return;
         }
@@ -357,61 +349,4 @@ public class WebResolver<T> extends BaseResolver implements Resolver<T> {
             aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(attribute, aResult.action));
         }
     }
-
-    static class SpiderTemp {
-
-        // 存储爬虫结果内容集合
-        ArrayNode content;
-        // 存储单条爬虫结果
-        ObjectNode contentTemp;
-        // 爬虫行为
-        JsonNode action;
-        // 存储多个节点
-        Elements arr;
-        // 存储单个节点 | 要解析的节点
-        Element obj;
-        // 上一次节点类型；
-        String lastType;
-        // 存储Array类型的子节点集合
-        Elements childNode = new Elements();
-
-        public SpiderTemp(ArrayNode content, JsonNode action, Elements arr, Element obj, String lastType) {
-            this.content = content;
-            this.action = action;
-            this.arr = arr;
-            this.obj = obj;
-            this.lastType = lastType;
-        }
-
-        public SpiderTemp(ObjectNode contentTemp, JsonNode action, Elements arr, Element obj, String lastType) {
-            this.contentTemp = contentTemp;
-            this.action = action;
-            this.arr = arr;
-            this.obj = obj;
-            this.lastType = lastType;
-        }
-
-        /**
-         * 克隆节点，作为下一次递归指针
-         */
-        public void next() {
-            if (this.childNode.isEmpty()) {
-                return;
-            }
-
-            this.arr = this.childNode.clone();
-            this.clearChildNode();
-            this.lastType = NodeConstants.ARRAY;
-        }
-
-        public void addChildNodes(Elements elements) {
-            this.childNode.addAll(elements);
-        }
-
-        private void clearChildNode() {
-            this.childNode.clear();
-        }
-    }
-
-
 }
