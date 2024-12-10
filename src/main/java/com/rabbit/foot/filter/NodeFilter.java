@@ -42,14 +42,20 @@ public class NodeFilter {
     /**
      * 获取 HandlerInterceptors 实例，确保类型安全。
      */
+    @SuppressWarnings("unchecked")
     private static Interceptors<String> getInterceptors(JsonNode interceptorsNode) {
         try {
-            // 使用 BeanUtils 获取 Bean，同时保证类型安全
-            return (Interceptors<String>) BeanUtils.getBean(interceptorsNode);
+            Object bean = BeanUtils.getBean(interceptorsNode);
+            if (bean instanceof Interceptors<?>) {
+                return (Interceptors<String>) bean;
+            } else {
+                throw new IllegalArgumentException("Bean is not of expected type");
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to get HandlerInterceptors bean", e);
         }
     }
+
 
 
 
