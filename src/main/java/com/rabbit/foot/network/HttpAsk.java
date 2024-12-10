@@ -1,12 +1,13 @@
 package com.rabbit.foot.network;
 
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.utils.ConvertUtils;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 /**
@@ -36,83 +37,78 @@ public class HttpAsk<T> {
      * @return 结果
      */
     public T execute() {
-
-        HttpRequest httpRequest = httpRequestBuild();
-
-        String method = this.action.get(Constants.METHOD).asText();
+        HttpRequest httpRequest = buildHttpRequest();
+        String method = action.get(Constants.METHOD).asText();
 
         if (method.equalsIgnoreCase(GET)) {
-            return get(httpRequest);
-        } else if (method.equals(POST)) {
-            return post(httpRequest);
+            return sendRequest(httpRequest);
+        } else if (method.equalsIgnoreCase(POST)) {
+            return sendRequest(httpRequest);
+        } else {
+            throw new UnsupportedOperationException("Unsupported HTTP method: " + method);
         }
-
-        return null;
     }
 
     /**
-     * 构建请求体
+     * 构建请求
      *
-     * @return 请求对象
+     * @return HttpRequest
      */
-    private HttpRequest httpRequestBuild() {
-        HttpRequest httpRequest = null;
-
-        if (action.has(Constants.URL)) {
-            httpRequest = HttpRequest.of(action.get(Constants.URL).asText());
+    private HttpRequest buildHttpRequest() {
+        if (!action.has(Constants.URL)) {
+            throw new IllegalArgumentException("URL is missing in the action");
         }
 
-        if (ObjUtil.isNull(httpRequest)) {
-            throw new IllegalArgumentException("爬虫行为描述资源缺失");
-        }
+        String url = action.get(Constants.URL).asText();
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url));
 
+        // 添加 Headers
         if (action.has(Constants.HEADERS)) {
-            // 将 JsonObject 转换为 Map
-            Map<String, String> result = ConvertUtils.jsonNodeToMapStrStr(action.get(Constants.HEADERS));
-            for (Map.Entry<String, String> header : result.entrySet()) {
-                String key = header.getKey();
-                String value = header.getValue();
-                httpRequest = httpRequest.header(key, value);
+            Map<String, String> headers = ConvertUtils.jsonNodeToMapStrStr(action.get(Constants.HEADERS));
+            headers.forEach(builder::header);
+        }
+
+        // 添加请求方法及 Body
+        String method = action.get(Constants.METHOD).asText();
+        if (method.equalsIgnoreCase(POST)) {
+            if (action.has(Constants.HEADERS)) {
+                String body = action.get(Constants.HEADERS).asText();
+                builder.POST(HttpRequest.BodyPublishers.ofString(body));
+            } else {
+                builder.POST(HttpRequest.BodyPublishers.noBody());
             }
+        } else {
+            builder.GET();
         }
 
-        if (action.has(Constants.PARAMS)) {
-            // 将 JsonObject 转换为 Map
-            Map<String, Object> result = ConvertUtils.jsonNodeToMapStrObj(action.get(Constants.PARAMS));
-
-            httpRequest = httpRequest.form(result);
-        }
-
-        if (action.has("body")) {
-            httpRequest = httpRequest.body(action.get("body").asText());
-        }
-
-        return httpRequest;
+        return builder.build();
     }
 
     /**
-     * Get 请求
+     * 发送请求
      *
-    * @return 目标地址
+     * @param httpRequest 请求对象
+     * @return 响应结果
      */
-    private T get(HttpRequest httpRequest) {
-
-        String body = httpRequest.method(Method.GET)
-                .execute().body();
-
-        return (T) body;
+    private T sendRequest(HttpRequest httpRequest) {
+        HttpClient client = HttpClient.newHttpClient();
+        try {
+            HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            return parseResponse(response.body());
+        } catch (Exception e) {
+            throw new RuntimeException("HTTP request failed", e);
+        }
     }
 
-
     /**
-     * Get 请求
+     * 解析响应
      *
-     * @return 目标地址
+     * @param responseBody 响应体
+     * @return 泛型结果
      */
-    private T post(HttpRequest httpRequest) {
-
-        String body = httpRequest.method(Method.POST).execute().body();
-
-        return (T) body;
+    @SuppressWarnings("unchecked")
+    private T parseResponse(String responseBody) {
+        // 假设直接返回响应体字符串
+        return (T) responseBody;
     }
 }

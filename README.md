@@ -28,9 +28,9 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
         "method": "GET",
         "url": "http://localhost/abc/",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
-        "params": {
+        "body": {
           "searchkey": "{params[0]}"
         }
       },
@@ -145,8 +145,8 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
         "headers": {
           "Cookie": "身份校验 Cookie"
         },
-        "params": {
-          "searchkey": "动态参数回填位置"
+        "body": {
+          "searchkey": "Post请求Body参数"
         }
       },
       "resolver-action": {

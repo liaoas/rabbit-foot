@@ -1,10 +1,11 @@
 package com.rabbit.foot.common.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -17,31 +18,24 @@ import java.util.Map;
  */
 public class ConvertUtils {
 
-    public static final ObjectMapper MAPPER = new ObjectMapper();
-
     /**
      * JsonNode 转为 Map<String, Object>
      *
-     * @param jsonNode 要转换的数据
+     * @param node 要转换的数据
      * @return 转换后的
      */
-    public static Map<String, Object> jsonNodeToMapStrObj(JsonNode jsonNode) {
-
-        return MAPPER.convertValue(jsonNode, new TypeReference<Map<String, Object>>() {
-        });
+    public static Map<String, String> jsonNodeToMapStrStr(JsonNode node) {
+        Map<String, String> map = new HashMap<>();
+        if (node != null && node.isObject()) {
+            Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+            while (fields.hasNext()) {
+                Map.Entry<String, JsonNode> entry = fields.next();
+                map.put(entry.getKey(), entry.getValue().asText());
+            }
+        }
+        return map;
     }
 
-    /**
-     * JsonNode 转为 Map<String, String>
-     *
-     * @param jsonNode 要转换的数据
-     * @return 转换后的
-     */
-    public static Map<String, String> jsonNodeToMapStrStr(JsonNode jsonNode) {
-
-        return MAPPER.convertValue(jsonNode, new TypeReference<Map<String, String>>() {
-        });
-    }
 
     /**
      * JsonNode 转为 JsonString 字符串

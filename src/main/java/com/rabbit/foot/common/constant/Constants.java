@@ -63,7 +63,7 @@ public class Constants {
     /**
      * 请求参数
      */
-    public static final String PARAMS = "params";
+    public static final String BODY = "body";
 
     /**
      * 解析动作

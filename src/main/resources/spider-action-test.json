@@ -8,9 +8,9 @@
         "method": "GET",
         "url": "https://www.gyzxzm.com/search/?searchkey={params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
-        "params": {
+        "body": {
           "searchkey": "{params[0]}"
         }
       },
@@ -118,7 +118,7 @@
         "method": "GET",
         "url": "{params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
         "params": {
           "searchkey": "{params[0]}"
@@ -185,7 +185,7 @@
         "method": "GET",
         "url": "{params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
         "params": {
           "searchkey": "{params[0]}"
@@ -231,7 +231,7 @@
         "method": "GET",
         "url": "http://www.booktxt.tw/ar.php?keyWord={params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
         "params": {
           "searchkey": "{params[0]}"
@@ -344,7 +344,7 @@
         "method": "GET",
         "url": "{params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
         "params": {
           "searchkey": "{params[0]}"
@@ -411,7 +411,7 @@
         "method": "GET",
         "url": "{params[0]}",
         "headers": {
-          "Cookie": "此处填写京东登录Cookie"
+          "Cookie": "cookie_value"
         },
         "params": {
           "searchkey": "{params[0]}"
