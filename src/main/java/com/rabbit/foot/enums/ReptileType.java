@@ -1,4 +1,4 @@
-package com.rabbit.foot.common.enums;
+package com.rabbit.foot.enums;
 
 /**
  * <p>

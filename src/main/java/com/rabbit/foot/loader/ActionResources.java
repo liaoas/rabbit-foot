@@ -5,9 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.rabbit.foot.common.constant.Constants;
-import com.rabbit.foot.common.enums.ReptileType;
-import com.rabbit.foot.common.utils.ConvertUtils;
+import com.rabbit.foot.constant.Constants;
+import com.rabbit.foot.enums.ReptileType;
+import com.rabbit.foot.utils.ConvertUtils;
 
 import java.net.URL;
 

@@ -1,8 +1,8 @@
 package com.rabbit.foot.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.rabbit.foot.common.constant.Constants;
-import com.rabbit.foot.common.utils.ConvertUtils;
+import com.rabbit.foot.constant.Constants;
+import com.rabbit.foot.utils.ConvertUtils;
 
 import java.net.URI;
 import java.net.http.HttpClient;

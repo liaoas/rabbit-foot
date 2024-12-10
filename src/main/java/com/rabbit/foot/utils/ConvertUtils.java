@@ -1,4 +1,4 @@
-package com.rabbit.foot.common.utils;
+package com.rabbit.foot.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -1,8 +1,7 @@
 package com.rabbit.foot.factory;
 
 import com.rabbit.foot.Main;
-import com.rabbit.foot.common.enums.ReptileType;
-import com.rabbit.foot.entity.Chapter;
+import com.rabbit.foot.enums.ReptileType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

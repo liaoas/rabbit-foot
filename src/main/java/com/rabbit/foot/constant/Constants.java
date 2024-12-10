@@ -1,4 +1,4 @@
-package com.rabbit.foot.common.constant;
+package com.rabbit.foot.constant;
 
 /**
  * <p>

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.rabbit.foot.common.constant.Constants;
-import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.constant.Constants;
+import com.rabbit.foot.constant.NodeConstants;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 

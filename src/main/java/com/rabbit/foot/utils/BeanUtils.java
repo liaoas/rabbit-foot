@@ -1,7 +1,7 @@
-package com.rabbit.foot.common.utils;
+package com.rabbit.foot.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.rabbit.foot.common.constant.Constants;
+import com.rabbit.foot.constant.Constants;
 
 import java.util.HashMap;
 import java.util.Map;

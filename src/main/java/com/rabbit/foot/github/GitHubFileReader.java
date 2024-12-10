@@ -1,7 +1,7 @@
 package com.rabbit.foot.github;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.rabbit.foot.common.utils.ConvertUtils;
+import com.rabbit.foot.utils.ConvertUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

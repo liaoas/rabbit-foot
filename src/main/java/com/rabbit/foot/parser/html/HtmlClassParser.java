@@ -1,7 +1,7 @@
 package com.rabbit.foot.parser.html;
 
-import com.rabbit.foot.common.constant.Constants;
-import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.constant.Constants;
+import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
 
 /**

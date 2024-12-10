@@ -1,9 +1,9 @@
 package com.rabbit.foot.factory;
 
-import com.rabbit.foot.common.enums.ReptileType;
+import com.rabbit.foot.enums.ReptileType;
 import com.rabbit.foot.loader.ActionResources;
 import com.rabbit.foot.parser.Parser;
-import com.rabbit.foot.common.utils.BeanUtils;
+import com.rabbit.foot.utils.BeanUtils;
 
 import java.net.URL;
 import java.util.List;
