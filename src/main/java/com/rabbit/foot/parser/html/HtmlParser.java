@@ -173,9 +173,6 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
             case NodeConstants.ID:
                 ElementIDParser.parser(temp, elementValue);
                 break;
-            case NodeConstants.CLASS:
-                ElementClassParser.parser(temp, elementValue);
-                break;
             case NodeConstants.TAGE:
                 ElementTageParser.parser(temp, elementValue);
                 break;
@@ -184,123 +181,8 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
                 ElementResultParser.parser(temp);
                 break;
             default:
-                ElementIndexParser.parser(temp, elementValue);
+                ElementClassParser.parser(temp, elementValue);
         }
 
-    }
-
-    /**
-     * 递归解析结果节点描述部分并组装成结果对象
-     */
-    private void packageAssembly(HtmlNodeTemp aResult) {
-        if (ObjUtil.isNull(aResult.action)) {
-            return;
-        }
-
-        if (NodeConstants.OBJECT.equals(aResult.lastType)) {
-            structuralAnalysisMap(aResult);
-        } else {
-            for (Element element : aResult.arr) {
-                aResult.obj = element;
-                structuralAnalysisMap(aResult);
-            }
-        }
-
-        if (!aResult.action.has(Constants.ELEMENT)) {
-            return;
-        }
-
-        aResult.action = aResult.action.path(Constants.ELEMENT);
-
-        aResult.next();
-
-        packageAssembly(aResult);
-    }
-
-
-    /**
-     * 结果解析并填充 JsonObject 对象属性：属性值
-     */
-    private void structuralAnalysisMap(HtmlNodeTemp aResult) {
-
-        if (!aResult.action.has(Constants.ELEMENT_TYPE) || !aResult.action.has(Constants.ELEMENT_VALUE)) {
-            return;
-        }
-
-        String elementType = aResult.action.get(Constants.ELEMENT_TYPE).asText();
-        String elementValue = aResult.action.get(Constants.ELEMENT_VALUE).asText();
-
-        switch (elementType) {
-            case NodeConstants.ID:
-                aResult.obj = aResult.obj.getElementById(elementValue);
-                results2Json(aResult);
-                aResult.lastType = NodeConstants.OBJECT;
-                break;
-            case NodeConstants.CLASS:
-                if (aResult.action.has(Constants.LEAF_INDEX)) {
-                    int anInt = aResult.action.get(Constants.LEAF_INDEX).asInt();
-                    try {
-                        aResult.obj = aResult.obj.getElementsByClass(elementValue).get(anInt);
-                    } catch (Exception e) {
-                        return;
-                    }
-                    results2Json(aResult);
-                    aResult.lastType = NodeConstants.OBJECT;
-
-                } else {
-                    aResult.arr = aResult.obj.getElementsByClass(elementValue);
-                    nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = NodeConstants.ARRAY;
-                    aResult.addChildNodes(aResult.arr);
-                }
-                break;
-
-            case NodeConstants.TAGE:
-                if (aResult.action.has(Constants.LEAF_INDEX)) {
-                    int anInt = aResult.action.get(Constants.LEAF_INDEX).asInt();
-
-                    try {
-                        aResult.obj = aResult.obj.getElementsByTag(elementValue).get(anInt);
-                    } catch (Exception e) {
-                        return;
-                    }
-
-                    results2Json(aResult);
-
-                    aResult.lastType = NodeConstants.OBJECT;
-
-                } else {
-                    aResult.arr = aResult.obj.getElementsByTag(elementValue);
-                    nodeFiltering(aResult.action, aResult.arr);
-                    aResult.lastType = NodeConstants.ARRAY;
-                    aResult.addChildNodes(aResult.arr);
-                }
-                break;
-            case NodeConstants.CONTENT:
-                results2Json(aResult);
-                break;
-        }
-    }
-
-    /**
-     * 将结果组装为Json对象
-     */
-    private void results2Json(HtmlNodeTemp aResult) {
-        if (!aResult.action.has(Constants.IS_LEAF) || !aResult.action.has(Constants.TARGET_KEY)) {
-            return;
-        }
-
-        String target = aResult.action.get(Constants.TARGET_KEY).asText();
-
-        if (target.equals(NodeConstants.TEXT)) {
-            String text = aResult.obj.text();
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(text, aResult.action));
-        } else if (target.equals(NodeConstants.HTML)) {
-            String html = aResult.obj.html();
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(html, aResult.action));
-        } else {
-            String attribute = aResult.obj.attr(target);
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), interceptors(attribute, aResult.action));
-        }
     }
 }
