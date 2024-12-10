@@ -6,12 +6,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.network.HttpAsk;
 import com.rabbit.foot.parser.BaseParser;
 import com.rabbit.foot.parser.Parser;
-import com.rabbit.foot.network.HttpAsk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
@@ -172,65 +171,20 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
 
         switch (elementType) {
             case NodeConstants.ID:
-                temp.obj = temp.obj.getElementById(elementValue);
-                temp.lastType = NodeConstants.OBJECT;
+                ElementIDParser.parser(temp, elementValue);
                 break;
             case NodeConstants.CLASS:
-                if (temp.action.has(Constants.LEAF_INDEX)) {
-                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
-                    temp.obj = temp.obj.getElementsByClass(elementValue).get(anInt);
-                    temp.lastType = NodeConstants.OBJECT;
-                } else {
-                    temp.arr = temp.obj.getElementsByClass(elementValue);
-                    temp.lastType = NodeConstants.ARRAY;
-                    nodeFiltering(temp.action, temp.arr);
-                    temp.addChildNodes(temp.arr);
-                }
+                ElementClassParser.parser(temp, elementValue);
                 break;
-
             case NodeConstants.TAGE:
-                if (temp.action.has(Constants.LEAF_INDEX)) {
-                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
-                    temp.obj = temp.obj.getElementsByTag(elementValue).get(anInt);
-                    temp.lastType = NodeConstants.OBJECT;
-                } else {
-                    temp.arr = temp.obj.getElementsByTag(elementValue);
-                    temp.lastType = NodeConstants.ARRAY;
-                    nodeFiltering(temp.action, temp.arr);
-                    temp.addChildNodes(temp.arr);
-                }
-
+                ElementTageParser.parser(temp, elementValue);
                 break;
             case NodeConstants.RESULT:
                 // 判断结果伪动作，标记开始组装结果
-                if (!temp.action.has(Constants.RESULT_ELEMENT)) {
-                    break;
-                }
-                // 获取结果动作集合
-                ArrayNode arrayNode = temp.action.withArray(Constants.RESULT_ELEMENT);
-
-                // 存储单个结果对象
-                ObjectNode objectNode = new ObjectMapper().createObjectNode();
-
-                // 遍历结果集合，组装到一个结果对象里
-                for (JsonNode jsonNode : arrayNode) {
-                    HtmlNodeTemp AResult = new HtmlNodeTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
-                    packageAssembly(AResult);
-                }
-
-                temp.content.add(objectNode);
+                ElementResultParser.parser(temp);
                 break;
             default:
-                if (temp.action.has(Constants.LEAF_INDEX)) {
-                    int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
-                    temp.obj = temp.obj.getElementsByAttribute(elementValue).get(anInt);
-                    temp.lastType = NodeConstants.OBJECT;
-                } else {
-                    temp.arr = temp.obj.getElementsByAttribute(elementValue);
-                    temp.lastType = NodeConstants.ARRAY;
-                    nodeFiltering(temp.action, temp.arr);
-                    temp.addChildNodes(temp.arr);
-                }
+                ElementIndexParser.parser(temp, elementValue);
         }
 
     }
