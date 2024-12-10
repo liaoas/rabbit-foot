@@ -171,17 +171,17 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
 
         switch (elementType) {
             case NodeConstants.ID:
-                ElementIDParser.parser(temp, elementValue);
+                HtmlIDParser.parser(temp, elementValue);
                 break;
             case NodeConstants.TAGE:
-                ElementTageParser.parser(temp, elementValue);
+                HtmlTageParser.parser(temp, elementValue);
                 break;
             case NodeConstants.RESULT:
                 // 判断结果伪动作，标记开始组装结果
-                ElementResultParser.parser(temp);
+                HtmlResultParser.parser(temp);
                 break;
             default:
-                ElementClassParser.parser(temp, elementValue);
+                HtmlClassParser.parser(temp, elementValue);
         }
 
     }

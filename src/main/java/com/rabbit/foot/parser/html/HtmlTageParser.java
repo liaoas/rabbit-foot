@@ -5,39 +5,39 @@ import com.rabbit.foot.common.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
 
 /**
- * 用于根据Class来获取html节点元素
+ * 用于根据Tage来获取html节点元素
  *
  * @author LiAo
  * @since 2024/12/10
  */
-public class ElementClassParser {
+public class HtmlTageParser {
 
-    public static void parser(HtmlNodeTemp temp, String className) {
+    public static void parser(HtmlNodeTemp temp, String tageName) {
         if (temp.action.has(Constants.LEAF_INDEX)) {
             int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
-            temp.obj = temp.obj.getElementsByClass(className).get(anInt);
+            temp.obj = temp.obj.getElementsByTag(tageName).get(anInt);
             temp.lastType = NodeConstants.OBJECT;
         } else {
-            temp.arr = temp.obj.getElementsByClass(className);
+            temp.arr = temp.obj.getElementsByTag(tageName);
             temp.lastType = NodeConstants.ARRAY;
             NodeFilter.nodeFiltering(temp.action, temp.arr);
             temp.addChildNodes(temp.arr);
         }
     }
 
-    public static void formatResult(HtmlNodeTemp nodeTemp, String className){
+    public static void formatResult(HtmlNodeTemp nodeTemp, String tageName){
         if (nodeTemp.action.has(Constants.LEAF_INDEX)) {
             int anInt = nodeTemp.action.get(Constants.LEAF_INDEX).asInt();
+
             try {
-                nodeTemp.obj = nodeTemp.obj.getElementsByClass(className).get(anInt);
+                nodeTemp.obj = nodeTemp.obj.getElementsByTag(tageName).get(anInt);
             } catch (Exception e) {
                 return;
             }
             HtmlResults2Json.results2Json(nodeTemp);
             nodeTemp.lastType = NodeConstants.OBJECT;
-
         } else {
-            nodeTemp.arr = nodeTemp.obj.getElementsByClass(className);
+            nodeTemp.arr = nodeTemp.obj.getElementsByTag(tageName);
             NodeFilter.nodeFiltering(nodeTemp.action, nodeTemp.arr);
             nodeTemp.lastType = NodeConstants.ARRAY;
             nodeTemp.addChildNodes(nodeTemp.arr);
