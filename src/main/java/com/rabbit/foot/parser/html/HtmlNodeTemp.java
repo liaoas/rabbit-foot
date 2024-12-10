@@ -18,19 +18,19 @@ import org.jsoup.select.Elements;
 public class HtmlNodeTemp {
 
     // 存储爬虫结果内容集合
-    ArrayNode content;
+    public ArrayNode content;
     // 存储单条爬虫结果
-    ObjectNode contentTemp;
+    public ObjectNode contentTemp;
     // 爬虫行为
-    JsonNode action;
+    public JsonNode action;
     // 存储多个节点
-    Elements arr;
+    public Elements arr;
     // 存储单个节点 | 要解析的节点
-    Element obj;
+    public Element obj;
     // 上一次节点类型；
-    String lastType;
+    public String lastType;
     // 存储Array类型的子节点集合
-    Elements childNode = new Elements();
+    public Elements childNode = new Elements();
 
 
     public HtmlNodeTemp(JsonNode action, Element webDocument) {

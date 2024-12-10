@@ -1,6 +1,8 @@
 package com.rabbit.foot.parser.html;
 
+import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.convert.HtmlResults2Json;
 
 /**
  * 用于根据ID来获取html节点元素
@@ -13,5 +15,11 @@ public class ElementIDParser {
     public static void parser(HtmlNodeTemp temp, String id) {
         temp.obj = temp.obj.getElementById(id);
         temp.lastType = NodeConstants.OBJECT;
+    }
+
+    public static void formatResult(HtmlNodeTemp nodeTemp, String idName){
+        nodeTemp.obj = nodeTemp.obj.getElementById(idName);
+        HtmlResults2Json.results2Json(nodeTemp);
+        nodeTemp.lastType = NodeConstants.OBJECT;
     }
 }

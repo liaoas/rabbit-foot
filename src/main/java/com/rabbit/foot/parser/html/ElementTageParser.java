@@ -2,6 +2,7 @@ package com.rabbit.foot.parser.html;
 
 import com.rabbit.foot.common.constant.Constants;
 import com.rabbit.foot.common.constant.NodeConstants;
+import com.rabbit.foot.convert.HtmlResults2Json;
 
 /**
  * 用于根据Tage来获取html节点元素
@@ -21,6 +22,25 @@ public class ElementTageParser {
             temp.lastType = NodeConstants.ARRAY;
             NodeFilter.nodeFiltering(temp.action, temp.arr);
             temp.addChildNodes(temp.arr);
+        }
+    }
+
+    public static void formatResult(HtmlNodeTemp nodeTemp, String tageName){
+        if (nodeTemp.action.has(Constants.LEAF_INDEX)) {
+            int anInt = nodeTemp.action.get(Constants.LEAF_INDEX).asInt();
+
+            try {
+                nodeTemp.obj = nodeTemp.obj.getElementsByTag(tageName).get(anInt);
+            } catch (Exception e) {
+                return;
+            }
+            HtmlResults2Json.results2Json(nodeTemp);
+            nodeTemp.lastType = NodeConstants.OBJECT;
+        } else {
+            nodeTemp.arr = nodeTemp.obj.getElementsByTag(tageName);
+            NodeFilter.nodeFiltering(nodeTemp.action, nodeTemp.arr);
+            nodeTemp.lastType = NodeConstants.ARRAY;
+            nodeTemp.addChildNodes(nodeTemp.arr);
         }
     }
 }
