@@ -47,3 +47,5 @@ public class ResolverFactory<T> extends ActionResources {
         return bean.execute(activeRes);
     }
 }
+
+
