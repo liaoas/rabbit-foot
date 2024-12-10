@@ -1,6 +1,5 @@
 package com.rabbit.foot.parser.html;
 
-import cn.hutool.core.util.ObjUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -8,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
+import com.rabbit.foot.utils.ObjUtil;
 import org.jsoup.nodes.Element;
 
 /**

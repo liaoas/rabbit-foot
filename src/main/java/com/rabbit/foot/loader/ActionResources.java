@@ -1,13 +1,12 @@
 package com.rabbit.foot.loader;
 
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.enums.ReptileType;
 import com.rabbit.foot.utils.ConvertUtils;
+import com.rabbit.foot.utils.ObjUtil;
 
 import java.net.URL;
 
@@ -36,7 +35,7 @@ public abstract class ActionResources {
      * 获取指定名称的爬虫描述
      */
     public void getSpiderActionConfigByName(String... params) {
-        if (StrUtil.isEmpty(spiderName)) {
+        if (ObjUtil.isEmpty(spiderName)) {
             return;
         }
 
@@ -47,7 +46,7 @@ public abstract class ActionResources {
      * 获取指定名称的爬虫描述
      */
     public void getSpiderActionConfigByUrl(String... params) {
-        if (ObjUtil.isEmpty(url)) {
+        if (ObjUtil.isNull(url)) {
             return;
         }
 

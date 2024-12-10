@@ -1,7 +1,5 @@
 package com.rabbit.foot.parser.html;
 
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +9,7 @@ import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.network.HttpAsk;
 import com.rabbit.foot.parser.BaseParser;
 import com.rabbit.foot.parser.Parser;
+import com.rabbit.foot.utils.ObjUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
@@ -118,7 +117,7 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
 
         String content = httpAsk.execute();
 
-        if (StrUtil.isEmpty(content)) {
+        if (ObjUtil.isEmpty(content)) {
             return;
         }
         this.webDocument = Jsoup.parse(content);
