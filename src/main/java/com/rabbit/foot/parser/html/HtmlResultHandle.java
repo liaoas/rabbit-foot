@@ -16,9 +16,9 @@ import org.jsoup.nodes.Element;
  * @author LiAo
  * @since 2024/12/10
  */
-public class HtmlResultParser {
+public class HtmlResultHandle {
 
-    public static void parser(HtmlNodeTemp temp) {
+    public static void handle(HtmlNodeTemp temp) {
         // 判断结果伪动作，标记开始组装结果
         if (!temp.action.has(Constants.RESULT_ELEMENT)) {
             return;
@@ -81,13 +81,13 @@ public class HtmlResultParser {
 
         switch (type) {
             case NodeConstants.ID:
-                HtmlIDParser.formatResult(nodeTemp, value);
+                HtmlIdHandle.formatResult(nodeTemp, value);
                 break;
             case NodeConstants.CLASS:
-                HtmlClassParser.formatResult(nodeTemp, value);
+                HtmlClassHandle.formatResult(nodeTemp, value);
                 break;
             case NodeConstants.TAGE:
-                HtmlTageParser.formatResult(nodeTemp, value);
+                HtmlTageHandle.formatResult(nodeTemp, value);
                 break;
             case NodeConstants.CONTENT:
                 HtmlResults2Json.results2Json(nodeTemp);

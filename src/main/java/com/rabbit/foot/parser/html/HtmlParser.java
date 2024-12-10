@@ -164,23 +164,23 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
      */
     private void getElement(HtmlNodeTemp temp) {
 
-        String elementType = temp.action.get(Constants.ELEMENT_TYPE).asText();
+        String type = temp.action.get(Constants.ELEMENT_TYPE).asText();
 
-        String elementValue = temp.action.get(Constants.ELEMENT_VALUE).asText();
+        String value = temp.action.get(Constants.ELEMENT_VALUE).asText();
 
-        switch (elementType) {
+        switch (type) {
             case NodeConstants.ID:
-                HtmlIDParser.parser(temp, elementValue);
+                HtmlIdHandle.handle(temp, value);
                 break;
             case NodeConstants.TAGE:
-                HtmlTageParser.parser(temp, elementValue);
+                HtmlTageHandle.handle(temp, value);
                 break;
             case NodeConstants.RESULT:
                 // 判断结果伪动作，标记开始组装结果
-                HtmlResultParser.parser(temp);
+                HtmlResultHandle.handle(temp);
                 break;
             default:
-                HtmlClassParser.parser(temp, elementValue);
+                HtmlClassHandle.handle(temp, value);
         }
 
     }

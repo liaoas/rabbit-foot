@@ -9,9 +9,9 @@ import com.rabbit.foot.convert.HtmlResults2Json;
  * @author LiAo
  * @since 2024/12/10
  */
-public class HtmlIDParser {
+public class HtmlIdHandle {
 
-    public static void parser(HtmlNodeTemp temp, String id) {
+    public static void handle(HtmlNodeTemp temp, String id) {
         temp.obj = temp.obj.getElementById(id);
         temp.lastType = NodeConstants.OBJECT;
     }
