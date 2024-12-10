@@ -1,6 +1,5 @@
 package com.rabbit.foot.factory;
 
-import com.rabbit.foot.Main;
 import com.rabbit.foot.enums.ReptileType;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +14,11 @@ import java.util.logging.Logger;
  */
 class ContentTest {
 
-    private static final Logger logger = Logger.getLogger(BookSearchTest.class.getName());
+    private static final Logger logger = Logger.getLogger(ContentTest.class.getName());
 
     @Test
     void content() {
-        ResolverFactory<String> resolverFactory = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
+        ResolverFactory<String> resolverFactory = new ResolverFactory<>(ContentTest.class.getClassLoader().getResource("spider-action-dev.json"),
                 "选书网", ReptileType.CONTENT, "http://localhost/hig/");
         List<String> list = resolverFactory.capture();
 

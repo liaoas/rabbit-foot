@@ -1,6 +1,5 @@
 package com.rabbit.foot.factory;
 
-import com.rabbit.foot.Main;
 import com.rabbit.foot.enums.ReptileType;
 import com.rabbit.foot.entity.BookData;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ class BookSearchTest {
 
     @Test
     void search() {
-        ResolverFactory<BookData> resolverFactory = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
+        ResolverFactory<BookData> resolverFactory = new ResolverFactory<>(BookSearchTest.class.getClassLoader().getResource("spider-action-dev.json"),
                 "选书网", ReptileType.SEARCH, "剑来");
         List<BookData> list = resolverFactory.capture();
 

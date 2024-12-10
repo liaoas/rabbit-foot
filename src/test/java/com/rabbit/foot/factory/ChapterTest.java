@@ -1,6 +1,5 @@
 package com.rabbit.foot.factory;
 
-import com.rabbit.foot.Main;
 import com.rabbit.foot.enums.ReptileType;
 import com.rabbit.foot.entity.Chapter;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ class ChapterTest {
 
     @Test
     void chapter() {
-        ResolverFactory<Chapter> resolverFactory = new ResolverFactory<>(Main.class.getClassLoader().getResource("spider-action-dev.json"),
+        ResolverFactory<Chapter> resolverFactory = new ResolverFactory<>(ChapterTest.class.getClassLoader().getResource("spider-action-dev.json"),
                 "选书网", ReptileType.CHAPTER, "http://localhost/efg/");
         List<Chapter> list = resolverFactory.capture();
 
