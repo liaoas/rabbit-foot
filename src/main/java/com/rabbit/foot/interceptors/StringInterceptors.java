@@ -8,7 +8,7 @@ package com.rabbit.foot.interceptors;
  * @author LiAo
  * @since 2023-09-28
  */
-public class MyHandlerInterceptors implements HandlerInterceptors<String> {
+public class StringInterceptors implements Interceptors<String> {
     /**
      * 拦截器处理，用于为字符串拼接指定的前缀与后缀
      *

@@ -1,4 +1,4 @@
-package com.rabbit.foot.parser.html;
+package com.rabbit.foot.html;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,6 +9,10 @@ import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.network.HttpAsk;
 import com.rabbit.foot.parser.BaseParser;
 import com.rabbit.foot.parser.Parser;
+import com.rabbit.foot.handle.HtmlClassHandle;
+import com.rabbit.foot.handle.HtmlIdHandle;
+import com.rabbit.foot.handle.HtmlResultHandle;
+import com.rabbit.foot.handle.HtmlTageHandle;
 import com.rabbit.foot.utils.ObjUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -64,7 +68,7 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
             return null;
         }
 
-        HtmlNodeTemp temp = new HtmlNodeTemp(resolverAction, this.webDocument);
+        NodeTemp temp = new NodeTemp(resolverAction, this.webDocument);
 
         resolver(temp);
 
@@ -129,7 +133,7 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
      *
      * @param temp 存储爬虫解析参数
      */
-    private void resolver(HtmlNodeTemp temp) {
+    private void resolver(NodeTemp temp) {
         if (ObjUtil.isNull(temp.action)) {
             return;
         }
@@ -162,7 +166,7 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
      *
      * @param temp 存储爬虫解析参数
      */
-    private void getElement(HtmlNodeTemp temp) {
+    private void getElement(NodeTemp temp) {
 
         String type = temp.action.get(Constants.ELEMENT_TYPE).asText();
 

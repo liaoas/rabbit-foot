@@ -1,4 +1,4 @@
-package com.rabbit.foot.parser.html;
+package com.rabbit.foot.handle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
+import com.rabbit.foot.html.NodeTemp;
 import com.rabbit.foot.utils.ObjUtil;
 import org.jsoup.nodes.Element;
 
@@ -18,7 +19,7 @@ import org.jsoup.nodes.Element;
  */
 public class HtmlResultHandle {
 
-    public static void handle(HtmlNodeTemp temp) {
+    public static void handle(NodeTemp temp) {
         // 判断结果伪动作，标记开始组装结果
         if (!temp.action.has(Constants.RESULT_ELEMENT)) {
             return;
@@ -31,7 +32,7 @@ public class HtmlResultHandle {
 
         // 遍历结果集合，组装到一个结果对象里
         for (JsonNode jsonNode : arrayNode) {
-            HtmlNodeTemp AResult = new HtmlNodeTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
+            NodeTemp AResult = new NodeTemp(objectNode, jsonNode, null, temp.obj, NodeConstants.OBJECT);
             packageAssembly(AResult);
         }
 
@@ -41,7 +42,7 @@ public class HtmlResultHandle {
     /**
      * 递归解析结果节点描述部分并组装成结果对象
      */
-    private static void packageAssembly(HtmlNodeTemp aResult) {
+    private static void packageAssembly(NodeTemp aResult) {
         if (ObjUtil.isNull(aResult.action)) {
             return;
         }
@@ -70,7 +71,7 @@ public class HtmlResultHandle {
     /**
      * 结果解析并填充 JsonObject 对象属性：属性值
      */
-    private static void structuralAnalysisMap(HtmlNodeTemp nodeTemp) {
+    private static void structuralAnalysisMap(NodeTemp nodeTemp) {
 
         if (!nodeTemp.action.has(Constants.ELEMENT_TYPE) || !nodeTemp.action.has(Constants.ELEMENT_VALUE)) {
             return;

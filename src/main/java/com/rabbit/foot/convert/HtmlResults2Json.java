@@ -2,7 +2,7 @@ package com.rabbit.foot.convert;
 
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
-import com.rabbit.foot.parser.html.HtmlNodeTemp;
+import com.rabbit.foot.html.NodeTemp;
 import com.rabbit.foot.filter.NodeFilter;
 
 /**
@@ -16,7 +16,7 @@ public class HtmlResults2Json {
     /**
      * 将结果组装为Json对象
      */
-    public static void results2Json(HtmlNodeTemp aResult) {
+    public static void results2Json(NodeTemp aResult) {
         if (!aResult.action.has(Constants.IS_LEAF) || !aResult.action.has(Constants.TARGET_KEY)) {
             return;
         }
@@ -25,13 +25,13 @@ public class HtmlResults2Json {
 
         if (target.equals(NodeConstants.TEXT)) {
             String text = aResult.obj.text();
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.interceptors(text, aResult.action));
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.filter(text, aResult.action));
         } else if (target.equals(NodeConstants.HTML)) {
             String html = aResult.obj.html();
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.interceptors(html, aResult.action));
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.filter(html, aResult.action));
         } else {
             String attribute = aResult.obj.attr(target);
-            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.interceptors(attribute, aResult.action));
+            aResult.contentTemp.put(aResult.action.get(Constants.RESULT_KEY).asText(), NodeFilter.filter(attribute, aResult.action));
         }
     }
 }

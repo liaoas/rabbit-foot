@@ -1,9 +1,10 @@
-package com.rabbit.foot.parser.html;
+package com.rabbit.foot.handle;
 
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
-import com.rabbit.foot.filter.NodeFilter;
+import com.rabbit.foot.filter.NodeRemoveFilter;
+import com.rabbit.foot.html.NodeTemp;
 
 /**
  * 用于根据Tage来获取html节点元素
@@ -13,7 +14,7 @@ import com.rabbit.foot.filter.NodeFilter;
  */
 public class HtmlTageHandle {
 
-    public static void handle(HtmlNodeTemp temp, String tageName) {
+    public static void handle(NodeTemp temp, String tageName) {
         if (temp.action.has(Constants.LEAF_INDEX)) {
             int anInt = temp.action.get(Constants.LEAF_INDEX).asInt();
             temp.obj = temp.obj.getElementsByTag(tageName).get(anInt);
@@ -21,12 +22,12 @@ public class HtmlTageHandle {
         } else {
             temp.arr = temp.obj.getElementsByTag(tageName);
             temp.lastType = NodeConstants.ARRAY;
-            NodeFilter.nodeFiltering(temp.action, temp.arr);
+            NodeRemoveFilter.filter(temp.action, temp.arr);
             temp.addChildNodes(temp.arr);
         }
     }
 
-    public static void formatResult(HtmlNodeTemp nodeTemp, String tageName){
+    public static void formatResult(NodeTemp nodeTemp, String tageName){
         if (nodeTemp.action.has(Constants.LEAF_INDEX)) {
             int anInt = nodeTemp.action.get(Constants.LEAF_INDEX).asInt();
 
@@ -39,7 +40,7 @@ public class HtmlTageHandle {
             nodeTemp.lastType = NodeConstants.OBJECT;
         } else {
             nodeTemp.arr = nodeTemp.obj.getElementsByTag(tageName);
-            NodeFilter.nodeFiltering(nodeTemp.action, nodeTemp.arr);
+            NodeRemoveFilter.filter(nodeTemp.action, nodeTemp.arr);
             nodeTemp.lastType = NodeConstants.ARRAY;
             nodeTemp.addChildNodes(nodeTemp.arr);
         }

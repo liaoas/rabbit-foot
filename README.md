@@ -58,7 +58,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
                   "target-key": "text",
                   "result-key": "title",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -77,7 +77,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
                     "result-key": "url",
                     "result-end": true,
                     "interceptors": {
-                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "type": "com.rabbit.foot.interceptors.StringInterceptors",
                       "prefix": "",
                       "suffix": ""
                     }
@@ -92,7 +92,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
                   "target-key": "text",
                   "result-key": "author",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -106,7 +106,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
                   "target-key": "text",
                   "result-key": "newChapter",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -193,7 +193,7 @@ rabbit-foot 是一个使用 Json 来描述爬虫的动作，从而实现动态�
                   "target-key": "text",
                   "result-key": "author",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }

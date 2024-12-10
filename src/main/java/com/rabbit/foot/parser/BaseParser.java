@@ -1,17 +1,7 @@
 package com.rabbit.foot.parser;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.rabbit.foot.constant.Constants;
-import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.loader.ActionResources;
-import com.rabbit.foot.interceptors.HandlerInterceptors;
-import com.rabbit.foot.utils.BeanUtils;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.Iterator;
 
 /**
  * <p>

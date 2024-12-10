@@ -3,7 +3,7 @@
     {
       "name": "书本网",
       "spider-type": "search",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -42,7 +42,7 @@
                   "result-key": "bookName",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -57,7 +57,7 @@
                   "result-key": "bookLink",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "http://www.booktxt.tw",
                     "suffix": ""
                   }
@@ -71,7 +71,7 @@
                   "target-key": "text",
                   "result-key": "author",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -85,7 +85,7 @@
                   "target-key": "text",
                   "result-key": "chapter",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -99,7 +99,7 @@
                   "target-key": "text",
                   "result-key": "updateDate",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -116,7 +116,7 @@
     {
       "name": "书本网",
       "spider-type": "chapter",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.Chapter"
       },
@@ -154,7 +154,7 @@
                   "target-key": "text",
                   "result-key": "name",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -169,7 +169,7 @@
                   "result-key": "link",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "http://www.booktxt.tw",
                     "suffix": ""
                   }
@@ -183,7 +183,7 @@
     {
       "name": "书本网",
       "spider-type": "content",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "java.lang.String"
       },
@@ -216,7 +216,7 @@
                 "target-key": "text",
                 "result-key": "value",
                 "interceptors": {
-                  "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                  "type": "com.rabbit.foot.interceptors.StringInterceptors",
                   "prefix": "",
                   "suffix": ""
                 }
@@ -229,7 +229,7 @@
     {
       "name": "笔趣阁",
       "spider-type": "search",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -272,7 +272,7 @@
                     "result-key": "bookName",
                     "result-end": true,
                     "interceptors": {
-                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "type": "com.rabbit.foot.interceptors.StringInterceptors",
                       "prefix": "",
                       "suffix": ""
                     }
@@ -291,7 +291,7 @@
                     "target-key": "title",
                     "result-key": "chapter",
                     "interceptors": {
-                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "type": "com.rabbit.foot.interceptors.StringInterceptors",
                       "prefix": "",
                       "suffix": ""
                     }
@@ -306,7 +306,7 @@
                   "target-key": "text",
                   "result-key": "author",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -320,7 +320,7 @@
                   "target-key": "text",
                   "result-key": "updateDate",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -335,7 +335,7 @@
                   "result-key": "bookLink",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "https://www.gyzxzm.com",
                     "suffix": ""
                   }
@@ -349,7 +349,7 @@
     {
       "name": "笔趣阁dev",
       "spider-type": "search",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -408,7 +408,7 @@
                             "result-key": "bookName",
                             "result-end": true,
                             "interceptors": {
-                              "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                              "type": "com.rabbit.foot.interceptors.StringInterceptors",
                               "prefix": "",
                               "suffix": ""
                             }
@@ -427,7 +427,7 @@
                             "target-key": "title",
                             "result-key": "chapter",
                             "interceptors": {
-                              "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                              "type": "com.rabbit.foot.interceptors.StringInterceptors",
                               "prefix": "",
                               "suffix": ""
                             }
@@ -442,7 +442,7 @@
                           "target-key": "text",
                           "result-key": "author",
                           "interceptors": {
-                            "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                            "type": "com.rabbit.foot.interceptors.StringInterceptors",
                             "prefix": "",
                             "suffix": ""
                           }
@@ -456,7 +456,7 @@
                           "target-key": "text",
                           "result-key": "updateDate",
                           "interceptors": {
-                            "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                            "type": "com.rabbit.foot.interceptors.StringInterceptors",
                             "prefix": "",
                             "suffix": ""
                           }
@@ -471,7 +471,7 @@
                           "result-key": "bookLink",
                           "result-end": true,
                           "interceptors": {
-                            "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                            "type": "com.rabbit.foot.interceptors.StringInterceptors",
                             "prefix": "https://www.gyzxzm.com",
                             "suffix": ""
                           }
@@ -489,7 +489,7 @@
     {
       "name": "选书网",
       "spider-type": "search",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.BookData"
       },
@@ -533,7 +533,7 @@
                   "target-key": "text",
                   "result-key": "bookName",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -552,7 +552,7 @@
                     "result-key": "bookLink",
                     "result-end": true,
                     "interceptors": {
-                      "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                      "type": "com.rabbit.foot.interceptors.StringInterceptors",
                       "prefix": "",
                       "suffix": ""
                     }
@@ -567,7 +567,7 @@
                   "target-key": "text",
                   "result-key": "author",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -581,7 +581,7 @@
                   "target-key": "text",
                   "result-key": "chapter",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -595,7 +595,7 @@
     {
       "name": "选书网",
       "spider-type": "chapter",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "com.rabbit.foot.entity.Chapter"
       },
@@ -633,7 +633,7 @@
                   "target-key": "text",
                   "result-key": "name",
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "",
                     "suffix": ""
                   }
@@ -648,7 +648,7 @@
                   "result-key": "link",
                   "result-end": true,
                   "interceptors": {
-                    "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                    "type": "com.rabbit.foot.interceptors.StringInterceptors",
                     "prefix": "http://www.booktxt.tw",
                     "suffix": ""
                   }
@@ -662,7 +662,7 @@
     {
       "name": "选书网",
       "spider-type": "content",
-      "type": "com.rabbit.foot.parser.html.HtmlParser",
+      "type": "com.rabbit.foot.html.HtmlParser",
       "config": {
         "java-type": "java.lang.String"
       },
@@ -695,7 +695,7 @@
                 "target-key": "html",
                 "result-key": "value",
                 "interceptors": {
-                  "type": "com.rabbit.foot.interceptors.MyHandlerInterceptors",
+                  "type": "com.rabbit.foot.interceptors.StringInterceptors",
                   "prefix": "",
                   "suffix": ""
                 }

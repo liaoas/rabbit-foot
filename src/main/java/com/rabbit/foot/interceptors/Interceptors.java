@@ -10,7 +10,7 @@ package com.rabbit.foot.interceptors;
  * @author LiAo
  * @since 2023-09-28
  */
-public interface HandlerInterceptors<T> {
+public interface Interceptors<T> {
 
     /**
      * 拦截器处理

@@ -71,8 +71,8 @@ public class HttpAsk<T> {
         // 添加请求方法及 Body
         String method = action.get(Constants.METHOD).asText();
         if (method.equalsIgnoreCase(POST)) {
-            if (action.has(Constants.HEADERS)) {
-                String body = action.get(Constants.HEADERS).asText();
+            if (action.has(Constants.BODY)) {
+                String body = action.get(Constants.BODY).asText();
                 builder.POST(HttpRequest.BodyPublishers.ofString(body));
             } else {
                 builder.POST(HttpRequest.BodyPublishers.noBody());
