@@ -3,6 +3,7 @@ package com.rabbit.foot.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rabbit.foot.constant.Constants;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +50,10 @@ public class BeanUtils {
         }
 
         try {
-            Object interceptors = Class.forName(javaType).newInstance();
+            Object interceptors = Class.forName(javaType).getDeclaredConstructor().newInstance();
             BEANS.put(javaType, interceptors);
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException("名为 " + javaType + " 的对象创建失败");
         }
 

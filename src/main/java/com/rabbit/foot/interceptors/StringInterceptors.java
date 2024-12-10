@@ -2,7 +2,7 @@ package com.rabbit.foot.interceptors;
 
 /**
  * <p>
- * 用于测试处理器
+ * 字符串拼接处理器
  * </p>
  *
  * @author LiAo
