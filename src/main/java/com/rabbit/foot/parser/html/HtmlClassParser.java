@@ -3,6 +3,7 @@ package com.rabbit.foot.parser.html;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.convert.HtmlResults2Json;
+import com.rabbit.foot.filter.NodeFilter;
 
 /**
  * 用于根据Class来获取html节点元素

@@ -3,7 +3,7 @@ package com.rabbit.foot.convert;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
 import com.rabbit.foot.parser.html.HtmlNodeTemp;
-import com.rabbit.foot.parser.html.NodeFilter;
+import com.rabbit.foot.filter.NodeFilter;
 
 /**
  * 将解析的Html结果转化为Json
