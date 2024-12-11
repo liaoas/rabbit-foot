@@ -6,7 +6,7 @@
 
   <groupId>com.rabbit.foot</groupId>
   <artifactId>rabbit-foot</artifactId>
-  <version>1.0.11</version>
+  <version>1.0.12</version>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
