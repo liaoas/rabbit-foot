@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.rabbit.foot.constant.Constants;
 import com.rabbit.foot.constant.NodeConstants;
-import com.rabbit.foot.network.HttpAsk;
-import com.rabbit.foot.parser.BaseParser;
-import com.rabbit.foot.parser.Parser;
 import com.rabbit.foot.handle.HtmlClassHandle;
 import com.rabbit.foot.handle.HtmlIdHandle;
 import com.rabbit.foot.handle.HtmlResultHandle;
 import com.rabbit.foot.handle.HtmlTageHandle;
+import com.rabbit.foot.network.HttpAsk;
+import com.rabbit.foot.parser.BaseParser;
+import com.rabbit.foot.parser.Parser;
 import com.rabbit.foot.utils.ObjUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -95,7 +95,11 @@ public class HtmlParser<T> extends BaseParser implements Parser<T> {
             Class<?> Clazz = Class.forName(javaType);
 
             if (Clazz.getName().equals(String.class.getName())) {
-                List<String> value = IntStream.range(0, arrayNode.size()).mapToObj(index -> arrayNode.get(index).get("value").asText()).collect(Collectors.toList());
+                List<String> value = IntStream
+                        .range(0, arrayNode.size())
+                        .mapToObj(index -> arrayNode.get(index).get("value").asText())
+                        .collect(Collectors.toList());
+
                 @SuppressWarnings("unchecked") List<T> newList = (List<T>) value;
                 return newList;
             }
