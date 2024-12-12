@@ -16,7 +16,7 @@ import java.util.List;
  * @author LiAo
  * @since 2023-09-28
  */
-@SuppressWarnings("unchecked")
+
 public class ResolverFactory<T> extends ActionResources {
 
     private ResolverFactory() {
@@ -42,6 +42,7 @@ public class ResolverFactory<T> extends ActionResources {
      *
      * @return 爬虫结果
      */
+    @SuppressWarnings("unchecked")
     public List<T> capture() {
         Parser<T> bean = (Parser<T>) BeanUtils.getBean(activeRes);
         return bean.execute(activeRes);
